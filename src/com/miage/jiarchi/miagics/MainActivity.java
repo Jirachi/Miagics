@@ -6,7 +6,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 
 public class MainActivity  extends AndroidApplication {
     /** Called when the activity is first created. */
@@ -21,11 +26,20 @@ public class MainActivity  extends AndroidApplication {
         initialize(new GameClient(), config);
     }
 
-
+    Character test;
+    Camera mCamera;
+    SpriteBatch mBatch;
+    World mPhysicsWorld;
+    
+    
     public class GameClient implements ApplicationListener, InputProcessor {		
         @Override
         public void create() {
-
+            test = new Character();
+            mCamera = new OrthographicCamera(28, 20);
+            mCamera.update();
+            mPhysicsWorld = new World(new Vector2(0, -20), true);
+            mBatch = new SpriteBatch();
         }
 
         @Override
@@ -36,7 +50,12 @@ public class MainActivity  extends AndroidApplication {
         @Override
         public void render() {
             Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-
+            mCamera.position.set(0, 0, 0);
+            mCamera.update();
+            
+            mBatch.begin();
+            test.render(mBatch, mCamera);
+            mBatch.end();
         }
 
         @Override
@@ -53,8 +72,6 @@ public class MainActivity  extends AndroidApplication {
         public void dispose() {
             // TODO Auto-generated method stub
         }
-
-
 
         @Override
         public boolean keyDown(int arg0) {
