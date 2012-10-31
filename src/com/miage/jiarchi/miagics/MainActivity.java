@@ -116,9 +116,9 @@ public class MainActivity  extends AndroidApplication {
         public boolean touchDown(int x, int y, int pointerId, int button) {
         	
         	if(x<=(Gdx.graphics.getWidth()/2)){
-        		test.setMoveDirection(1);
+        		test.setMoveDirection(-1);
         	}else{
-        		test.setMoveDirection(2);
+        		test.setMoveDirection(1);
         	}
         	
         	
