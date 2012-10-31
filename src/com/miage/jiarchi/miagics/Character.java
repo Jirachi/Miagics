@@ -17,7 +17,7 @@ public class Character {
     protected Vector2 mPosition;
     protected Vector3 mProjection;
     
-    
+    protected float mTempsAccumule;
     
     //attributs d'animation
     protected TextureRegion region;
@@ -41,6 +41,7 @@ public class Character {
     float stateTime;
     
     public Character() {
+    	mTempsAccumule=0;
         mTexture = new Texture(Gdx.files.internal("animated/droid_from_android.png"));
         region = new TextureRegion(mTexture, 0, 0, 50, 86);
         mPosition = new Vector2(-5,-5);
@@ -60,7 +61,6 @@ public class Character {
     
     public void setMoveDirection(int direction){
     	mMoveDirection=direction;
-    	    	
     }
     
     
@@ -78,14 +78,14 @@ public class Character {
     }
     
     public void update(float timeDelta){
-    	
+    	mTempsAccumule+=timeDelta;
         switch (mMoveDirection){
         case MOVE_LEFT: 
             this.mPosition.x = this.mPosition.x - timeDelta * 20.0f;
             currentLine = 3;
-            if(timeDelta>100){
+            if(mTempsAccumule>0.1f){
             	currentColumn++;
-            
+            	mTempsAccumule=0;
         		if(currentColumn==FRAME_COLS){
         			currentColumn=0;
         		}
@@ -95,8 +95,9 @@ public class Character {
         case MOVE_RIGHT: 
             this.mPosition.x = this.mPosition.x + timeDelta * 20.0f;
             currentLine = 1;
-            if(timeDelta>100){
+            if(mTempsAccumule>0.1f){
             	currentColumn++;
+            	mTempsAccumule=0;
             	if(currentColumn==FRAME_COLS){
             		currentColumn=0;
             	}
