@@ -110,13 +110,20 @@ public class MainActivity  extends AndroidApplication {
 
         @Override
         public boolean touchDown(int x, int y, int pointerId, int button) {
-
+        	
+        	if(x<=(Gdx.graphics.getWidth()/2)){
+        		test.setMoveDirection(1);
+        	}else{
+        		test.setMoveDirection(2);
+        	}
+        	
+        	
             return false;
         }
 
         @Override
         public boolean touchUp(int arg0, int arg1, int arg2, int arg3) {
-
+        	test.setMoveDirection(0);
             return false;
         }
     }
