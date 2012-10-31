@@ -35,6 +35,8 @@ public class MainActivity  extends AndroidApplication {
 
         @Override
         public void render() {
+        	
+        	
             Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
         }
