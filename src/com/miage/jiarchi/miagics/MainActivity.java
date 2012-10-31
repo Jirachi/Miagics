@@ -18,6 +18,7 @@ public class MainActivity  extends AndroidApplication {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         config.useAccelerometer = true;
         config.useCompass = false;
@@ -49,6 +50,8 @@ public class MainActivity  extends AndroidApplication {
 
         @Override
         public void render() {
+        	
+        	
             Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
             mCamera.position.set(0, 0, 0);
             mCamera.update();
