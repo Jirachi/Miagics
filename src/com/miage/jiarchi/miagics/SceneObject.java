@@ -8,10 +8,9 @@ public abstract class SceneObject {
 	protected String mReferenceName;
 	protected Vector2 mPosition;
 	protected float mAngle;
-	protected SpriteBatch mBatch;
-	protected Camera mCam;
 	
 	public SceneObject(String refName){
+		mPosition = new Vector2();
 		mReferenceName = refName;
 	}
 	
