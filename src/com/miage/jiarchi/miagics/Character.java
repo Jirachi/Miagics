@@ -22,19 +22,24 @@ public class Character {
     
     public Character() {
         mTexture = new Texture(Gdx.files.internal("animated/droid_from_android.png"));
-        mPosition = new Vector2();
+        mPosition = new Vector2(-5,-5);
         mProjection = new Vector3();
         // mBody = new body
     }
     
     public void setMoveDirection(int direction){
     	mMoveDirection=direction;
-    	
-    	
-    	
+    	    	
     }
     
-    public void render(SpriteBatch batch, Camera cam) {
+    
+    
+    
+    public Vector2 getPosition() {
+		return mPosition;
+	}
+
+	public void render(SpriteBatch batch, Camera cam) {
     	update(Gdx.graphics.getDeltaTime());
     	cam.project(mProjection.set(mPosition.x, mPosition.y, 0));
         batch.draw(mTexture, mProjection.x, mProjection.y, 110, 130);
