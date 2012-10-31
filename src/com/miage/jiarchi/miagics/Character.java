@@ -20,17 +20,18 @@ public class Character {
     protected float mTempsAccumule;
     
     //attributs d'animation
-    protected TextureRegion region;
-    protected TextureRegion[]        walkFrames; 
-    protected TextureRegion[][] tmp;
+    protected TextureRegion mRegion;
+    protected TextureRegion[] mWalkFrames; 
+    protected TextureRegion[][] mTmp;
+    protected int mOppose;
     //indices courants
-    protected int currentColumn;
-    protected int currentLine;
+    protected int mCurrentColumn;
+    protected int mCurrentLine;
     
     
     
-    public final static int MOVE_LEFT = 1;
-    public final static int MOVE_RIGHT = 2;
+    public final static int MOVE_LEFT = -1;
+    public final static int MOVE_RIGHT = 1;
     public final static int MOVE_TOP = 3;
     public final static int MOVE_BOTTOM = 4;
     public final static int MOVE_NOT = 0;
@@ -42,18 +43,19 @@ public class Character {
     
     public Character() {
     	mTempsAccumule=0;
+    	mOppose=1;
         mTexture = new Texture(Gdx.files.internal("animated/droid_from_android.png"));
-        region = new TextureRegion(mTexture, 0, 0, 50, 86);
+        mRegion = new TextureRegion(mTexture, 0, 0, 50, 86);
         mPosition = new Vector2(-5,-5);
         mProjection = new Vector3();
         // mBody = new body
         
-         tmp = TextureRegion.split(mTexture, mTexture.getWidth() / FRAME_COLS, mTexture.getHeight() / FRAME_ROWS);                                // #10
-        		                walkFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
+         mTmp = TextureRegion.split(mTexture, mTexture.getWidth() / FRAME_COLS, mTexture.getHeight() / FRAME_ROWS);                                // #10
+        		                mWalkFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
         		                int index = 0;
         		                for (int i = 0; i < FRAME_ROWS; i++) {
         		                        for (int j = 0; j < FRAME_COLS; j++) {
-        		                                walkFrames[index++] = tmp[i][j];
+        		                                mWalkFrames[index++] = mTmp[i][j];
         		                        }
         		                }
         		                
@@ -74,7 +76,7 @@ public class Character {
     	update(Gdx.graphics.getDeltaTime());
     	cam.project(mProjection.set(mPosition.x, mPosition.y, 0));
     	
-        batch.draw(this.tmp[currentLine][currentColumn], mProjection.x, mProjection.y, 50, 86);
+        batch.draw(this.mTmp[mCurrentLine][mCurrentColumn], mProjection.x, mProjection.y, (mOppose *56), 80);
     }
     
     public void update(float timeDelta){
@@ -82,31 +84,33 @@ public class Character {
         switch (mMoveDirection){
         case MOVE_LEFT: 
             this.mPosition.x = this.mPosition.x - timeDelta * 20.0f;
-            currentLine = 3;
+            mCurrentLine = 1;
+            mOppose=-1;
             if(mTempsAccumule>0.1f){
-            	currentColumn++;
+            	mCurrentColumn++;
             	mTempsAccumule=0;
-        		if(currentColumn==FRAME_COLS){
-        			currentColumn=0;
+        		if(mCurrentColumn==FRAME_COLS){
+        			mCurrentColumn=0;
         		}
             }
             break;
             
         case MOVE_RIGHT: 
             this.mPosition.x = this.mPosition.x + timeDelta * 20.0f;
-            currentLine = 1;
+            mCurrentLine = 1;
+            mOppose=1;
             if(mTempsAccumule>0.1f){
-            	currentColumn++;
+            	mCurrentColumn++;
             	mTempsAccumule=0;
-            	if(currentColumn==FRAME_COLS){
-            		currentColumn=0;
+            	if(mCurrentColumn==FRAME_COLS){
+            		mCurrentColumn=0;
             	}
             }
             break;
             
         case MOVE_NOT: 
             //this.mPosition.x = this.mPosition.x + timeDelta * 20.0f;
-            currentLine = 0;
+            mCurrentLine = 0;
             break;
         /*
         case MOVE_TOP : this.pos.y=this.pos.y+10;
