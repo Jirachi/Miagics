@@ -10,8 +10,6 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
 
 public class MainActivity  extends AndroidApplication {
     /** Called when the activity is first created. */
@@ -29,9 +27,7 @@ public class MainActivity  extends AndroidApplication {
 
     Character test;
     Camera mCamera;
-    SpriteBatch mBatch;
-    World mPhysicsWorld;
-    
+    SpriteBatch mBatch;    
     
     public class GameClient implements ApplicationListener, InputProcessor {		
         @Override
@@ -39,7 +35,6 @@ public class MainActivity  extends AndroidApplication {
             test = new Character();
             mCamera = new OrthographicCamera(28, 20);
             mCamera.update();
-            mPhysicsWorld = new World(new Vector2(0, -20), true);
             mBatch = new SpriteBatch();
         }
 
@@ -50,8 +45,6 @@ public class MainActivity  extends AndroidApplication {
 
         @Override
         public void render() {
-        	
-        	
             Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
             mCamera.position.set(0, 0, 0);
             mCamera.update();
