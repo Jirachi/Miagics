@@ -53,6 +53,7 @@ public class MainActivity  extends AndroidApplication {
             
             mBatch.begin();
             test.render(mBatch, mCamera);
+            test2.render(mBatch, mCamera);
             mBatch.end();
         }
 
