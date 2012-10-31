@@ -38,6 +38,8 @@ public class MainActivity  extends AndroidApplication {
             mCamera = new OrthographicCamera(28, 20);
             mCamera.update();
             mBatch = new SpriteBatch();
+           
+            Gdx.input.setInputProcessor(this);
         }
 
         @Override
