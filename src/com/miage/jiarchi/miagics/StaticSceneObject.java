@@ -19,7 +19,7 @@ public class StaticSceneObject extends SceneObject {
 
 	public void render(SpriteBatch batch, Camera cam){
 		cam.project(mProjection.set(mPosition.x, mPosition.y, 0));
-		batch.draw(mTexture, mPosition.x, mPosition.y , 110, 130);
+		batch.draw(mTexture, mProjection.x, mProjection.y , 110, 130);
 	}
 
 }

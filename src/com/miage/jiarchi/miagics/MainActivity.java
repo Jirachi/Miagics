@@ -50,13 +50,15 @@ public class MainActivity  extends AndroidApplication {
         @Override
         public void render() {
             Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-            mCamera.position.set(0, 0, 0);
-            mCamera.update();
+            
             
             mBatch.begin();
             test.render(mBatch, mCamera);
             test2.render(mBatch, mCamera);
             mBatch.end();
+            
+            mCamera.position.set(test.getPosition().x, test.getPosition().y, 0);
+            mCamera.update();
         }
 
         @Override
