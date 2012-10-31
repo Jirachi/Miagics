@@ -28,6 +28,7 @@ public class MainActivity  extends AndroidApplication {
     }
 
     Character test;
+    SceneObject test2;
     Camera mCamera;
     SpriteBatch mBatch;
     World mPhysicsWorld;
@@ -37,6 +38,7 @@ public class MainActivity  extends AndroidApplication {
         @Override
         public void create() {
             test = new Character();
+            test2 =  new StaticSceneObject("","animated/fox.png");
             mCamera = new OrthographicCamera(28, 20);
             mCamera.update();
             mPhysicsWorld = new World(new Vector2(0, -20), true);
