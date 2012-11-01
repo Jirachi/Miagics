@@ -1,11 +1,8 @@
 package com.miage.jiarchi.miagics;
 
-
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -18,18 +15,16 @@ public class Character {
 	protected Vector3 mProjection;
 
 	protected float mTempsAccumule;
+	protected float mMoveSpeed = 20.0f;
 
 	//attributs d'animation
 	protected TextureRegion mRegion;
-	protected TextureRegion[] mWalkFrames; 
 	protected TextureRegion[][] mTmp;
 	protected int mOppose;
 
 	//indices courants
 	protected int mCurrentColumn;
 	protected int mCurrentLine;
-
-
 
 	public final static int MOVE_LEFT = -1;
 	public final static int MOVE_RIGHT = 1;
@@ -40,8 +35,9 @@ public class Character {
 	private static final int        FRAME_COLS = 3;         // #1
 	private static final int        FRAME_ROWS = 9; 
 
-	float stateTime;
-
+	/**
+	 * Default constructor
+	 */
 	public Character() {
 		mTempsAccumule=0;
 		mOppose=1;
@@ -51,23 +47,18 @@ public class Character {
 		mProjection = new Vector3();
 		// mBody = new body
 
-		mTmp = TextureRegion.split(mTexture, mTexture.getWidth() / FRAME_COLS, mTexture.getHeight() / FRAME_ROWS);                                // #10
-		mWalkFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
-		int index = 0;
-		for (int i = 0; i < FRAME_ROWS; i++) {
-			for (int j = 0; j < FRAME_COLS; j++) {
-				mWalkFrames[index++] = mTmp[i][j];
-			}
-		}
-
+		mTmp = TextureRegion.split(mTexture, mTexture.getWidth() / FRAME_COLS, mTexture.getHeight() / FRAME_ROWS);
 	}
 
-	public void setMoveDirection(int direction){
-		mMoveDirection=direction;
+	public void setMoveDirection(int direction) {
+	    if (direction != MOVE_NOT && mOppose != direction) {
+	        // On tourne les textures puisqu'on va dans l'autre sens
+	        flipTextures();
+	        mOppose = direction;
+	    }
+	    
+	    mMoveDirection = direction;
 	}
-
-
-
 
 	public Vector2 getPosition() {
 		return mPosition;
@@ -80,57 +71,40 @@ public class Character {
 		batch.draw(this.mTmp[mCurrentLine][mCurrentColumn], mProjection.x, mProjection.y, (56), 80);
 	}
 
-	public void update(float timeDelta){
-		mTempsAccumule+=timeDelta;
-		switch (mMoveDirection){
+	public void update(float timeDelta) {
+		mTempsAccumule += timeDelta;
+		
+		switch (mMoveDirection) {
 		case MOVE_LEFT: 
-			this.mPosition.x = this.mPosition.x - timeDelta * 20.0f;
+			this.mPosition.x = this.mPosition.x - timeDelta * mMoveSpeed;
 			mCurrentLine = 1;
-			
-			if (mOppose != -1)
-				flipTextures();
-			
-			mOppose=-1;
-			if(mTempsAccumule>0.1f){
-				mCurrentColumn++;
-				mTempsAccumule=0;
-				if(mCurrentColumn==FRAME_COLS){
-					mCurrentColumn=0;
-				}
-			}
 			break;
 
 		case MOVE_RIGHT: 
-			this.mPosition.x = this.mPosition.x + timeDelta * 20.0f;
+			this.mPosition.x = this.mPosition.x + timeDelta * mMoveSpeed;
 			mCurrentLine = 1;
-			
-			if (mOppose != 1)
-				flipTextures();
-			
-			mOppose=1;
-			if(mTempsAccumule>0.1f){
-				mCurrentColumn++;
-				mTempsAccumule=0;
-				if(mCurrentColumn==FRAME_COLS){
-					mCurrentColumn=0;
-				}
-			}
 			break;
 
 		case MOVE_NOT: 
-			//this.mPosition.x = this.mPosition.x + timeDelta * 20.0f;
 			mCurrentLine = 0;
 			break;
-			/*
-        case MOVE_TOP : this.pos.y=this.pos.y+10;
-        case MOVE_BOTTOM : this.pos.y=this.pos.y-10;*/
 		}
 
-
+		// Mise ˆ jour de l'animation
+		if (mTempsAccumule > 0.1f) {
+            mCurrentColumn++;
+            mTempsAccumule = 0;
+            
+            if (mCurrentColumn == FRAME_COLS) {
+                mCurrentColumn = 0;
+            }
+        }
 
 	}
 
-
+	/**
+	 * Mirroir horizontal des textures
+	 */
 	public void flipTextures() {
 		for (int i = 0; i < mTmp.length; i++) {
 			for (int j = 0; j < mTmp[i].length; j++) {
