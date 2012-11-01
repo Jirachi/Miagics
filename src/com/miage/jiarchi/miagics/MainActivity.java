@@ -29,17 +29,25 @@ public class MainActivity  extends AndroidApplication {
     SceneObject test2;
     Camera mCamera;
     SpriteBatch mBatch;    
-    
+    CharacterController CharaControl;
     public class GameClient implements ApplicationListener, InputProcessor {		
         @Override
         public void create() {
-            test = new Character();
+        	CharaControl = new CharacterController();
+            test= new Character();
             test2 =  new StaticSceneObject("","animated/fox.png");
+            
+            //ajout ici des characters dans la liste (dans characontroller)
+            CharaControl.addCharacter(test);
+            
             mCamera = new OrthographicCamera(28, 20);
             mCamera.update();
             mBatch = new SpriteBatch();
            
             Gdx.input.setInputProcessor(this);
+            
+            
+            
         }
 
         @Override
@@ -53,7 +61,8 @@ public class MainActivity  extends AndroidApplication {
             
             
             mBatch.begin();
-            test.render(mBatch, mCamera);
+            //render all du chara controller
+            CharaControl.renderAll(mBatch, mCamera);
             test2.render(mBatch, mCamera);
             mBatch.end();
             
