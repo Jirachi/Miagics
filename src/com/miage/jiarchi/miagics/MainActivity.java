@@ -27,6 +27,7 @@ public class MainActivity  extends AndroidApplication {
 
     Character test;
     SceneObject test2;
+    AnimatedObjects test3;
     Camera mCamera;
     SpriteBatch mBatch;    
     CharacterController CharaControl;
@@ -36,6 +37,7 @@ public class MainActivity  extends AndroidApplication {
         	CharaControl = new CharacterController();
             test= new Character();
             test2 =  new StaticSceneObject("","animated/fox.png");
+            test3 = new AnimatedObjects("","animated/droid_from_android.png");
             
             //ajout ici des characters dans la liste (dans characontroller)
             CharaControl.addCharacter(test);
@@ -64,6 +66,7 @@ public class MainActivity  extends AndroidApplication {
             //render all du chara controller
             CharaControl.renderAll(mBatch, mCamera);
             test2.render(mBatch, mCamera);
+            test3.render(mBatch, mCamera);
             mBatch.end();
             
             mCamera.position.set(test.getPosition().x, test.getPosition().y, 0);
