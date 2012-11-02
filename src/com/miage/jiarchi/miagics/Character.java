@@ -1,5 +1,7 @@
 package com.miage.jiarchi.miagics;
 
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
@@ -9,10 +11,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.WorldManifold;
 
 public class Character {
 	protected Texture mTexture;
@@ -27,6 +31,8 @@ public class Character {
 	protected Body mPhysicsBody;
 	protected Fixture mPhysicsChestFixture;
 	protected Fixture mPhysicsSensorFixture;
+	protected long mLastGroundTime;
+	protected float mStillTime;
 
 	// attributs d'animation
 	protected TextureRegion mRegion;
@@ -91,6 +97,7 @@ public class Character {
 	 */
 	public void render(SpriteBatch batch, Camera cam) {
 		update(Gdx.graphics.getDeltaTime());
+		mPosition = mPhysicsBody.getPosition();
 		cam.project(mProjection.set(mPosition.x, mPosition.y, 0));
 		
 		batch.draw(this.mTmp[mCurrentLine][mCurrentColumn], mProjection.x, mProjection.y, (56), 80);
@@ -106,12 +113,10 @@ public class Character {
 		
 		switch (mMoveDirection) {
 		case MOVE_LEFT: 
-			this.mPosition.x = this.mPosition.x - timeDelta * mMoveSpeed;
 			mCurrentLine = 1;
 			break;
 
-		case MOVE_RIGHT: 
-			this.mPosition.x = this.mPosition.x + timeDelta * mMoveSpeed;
+		case MOVE_RIGHT:
 			mCurrentLine = 1;
 			break;
 
@@ -130,6 +135,63 @@ public class Character {
             }
         }
 
+		// Mise à jour des propriétés physiques
+        Vector2 vel = mPhysicsBody.getLinearVelocity();
+        Vector2 pos = mPhysicsBody.getPosition();     
+        boolean grounded = isTouchingGround();
+        
+        // On estime être sur le sol si on le touche, ou si on l'a
+        // récemment touché pour compenser le manque de précision
+        if (grounded) {
+            mLastGroundTime = System.nanoTime();
+        } else {
+            if (System.nanoTime() - mLastGroundTime < 100000000) {
+                grounded = true;
+            }
+        }
+ 
+        // On limite la vitesse de mouvement à la vitesse max
+        if (Math.abs(vel.x) > mMoveSpeed) {            
+            vel.x = Math.signum(vel.x) * mMoveSpeed;
+            mPhysicsBody.setLinearVelocity(vel.x, vel.y);
+        }
+ 
+        // On calcule le temps qu'on a passé sans bouger, et on applique l'inertie (90%)
+        if (mMoveDirection == MOVE_NOT) {         
+            mStillTime += Gdx.graphics.getDeltaTime();
+            mPhysicsBody.setLinearVelocity(vel.x * 0.9f, vel.y);
+        }
+        else { 
+            mStillTime = 0;
+        }           
+ 
+        // On retire la friction si on saute
+        if (!grounded) {         
+            mPhysicsChestFixture.setFriction(0f);
+            mPhysicsSensorFixture.setFriction(0f);            
+        } else {
+            // Si on ne bouge pas et si on est arrêté depuis 200ms, on rapplique les frottements
+            // au sol
+            if(mMoveDirection == MOVE_NOT && mStillTime > 0.2) {
+                mPhysicsChestFixture.setFriction(100f);
+                mPhysicsSensorFixture.setFriction(100f);
+            }
+            else {
+                // Sinon on garde un frottement minimal
+                mPhysicsChestFixture.setFriction(0.2f);
+                mPhysicsSensorFixture.setFriction(0.2f);
+            }
+        }       
+ 
+        // Si on va a gauche et qu'on est pas déjà à la vitesse max
+        if(mMoveDirection == MOVE_LEFT && vel.x > -mMoveSpeed) {
+            mPhysicsBody.applyLinearImpulse(-2f, 0, pos.x, pos.y);
+        } 
+ 
+        // Si on va a droite et qu'on est pas déjà à la vitesse max
+        if(mMoveDirection == MOVE_RIGHT && vel.x < mMoveSpeed) {
+            mPhysicsBody.applyLinearImpulse(2f, 0, pos.x, pos.y);
+        }
 	}
 
 	/**
@@ -187,4 +249,44 @@ public class Character {
         // On empêche le personnage de faire des rotations impromptues
         mPhysicsBody.setFixedRotation(true);
 	}
+	
+	/**
+	 * Renvoie si oui ou non le personnage touche le sol (c-a-d qu'il n'est pas en train
+	 * de tomber)
+	 * @param deltaTime
+	 * @return boolean
+	 */
+	public boolean isTouchingGround() {
+	    // On récupère la liste des collisions en cours
+        List<Contact> contactList = PhysicsController.getInstance().getWorld().getContactList();
+        
+        // Pour chaque point de contact
+        for(int i = 0; i < contactList.size(); i++) {
+            Contact contact = contactList.get(i);
+            
+            // Si un des cotés touche les pieds du personnage
+            if(contact.isTouching() && (contact.getFixtureA() == mPhysicsSensorFixture ||
+               contact.getFixtureB() == mPhysicsSensorFixture)) {             
+ 
+                // On récupère la position du personnage
+                Vector2 pos = mPhysicsBody.getPosition();
+                
+                // On vérifie que les points de contacts sont bien juste en dessous des pieds
+                WorldManifold manifold = contact.getWorldManifold();
+                boolean below = true;
+                
+                for (int j = 0; j < manifold.getNumberOfContactPoints(); j++) {
+                    below &= (manifold.getPoints()[j].y < pos.y - 1.5f);
+                }
+ 
+                if (below) {
+                    // Tous les points de contact sont bien en-dessous, on est calés
+                    return true;
+                }
+ 
+                return false;
+            }
+        }
+        return false;
+    }
 }
