@@ -27,20 +27,19 @@ public class MainActivity  extends AndroidApplication {
 
     Character test;
     SceneObject test2;
-    AnimatedObjects test3;
+    AnimatedSceneObject test3;
     Camera mCamera;
     SpriteBatch mBatch;    
-    CharacterController CharaControl;
+
     public class GameClient implements ApplicationListener, InputProcessor {		
         @Override
         public void create() {
-        	CharaControl = new CharacterController();
-            test= new Character();
+            test = new Character();
             test2 =  new StaticSceneObject("","animated/fox.png");
-            test3 = new AnimatedObjects("","animated/droid_from_android.png");
+            test3 = new AnimatedSceneObject("","animated/droid_from_android.png");
             
             //ajout ici des characters dans la liste (dans characontroller)
-            CharaControl.addCharacter(test);
+            CharacterController.getInstance().addCharacter(test);
             
             mCamera = new OrthographicCamera(28, 20);
             mCamera.update();
@@ -60,13 +59,15 @@ public class MainActivity  extends AndroidApplication {
         @Override
         public void render() {
             Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-            
+            PhysicsController.getInstance().update();
             
             mBatch.begin();
+            
             //render all du chara controller
-            CharaControl.renderAll(mBatch, mCamera);
+            CharacterController.getInstance().renderAll(mBatch, mCamera);
             test2.render(mBatch, mCamera);
             test3.render(mBatch, mCamera);
+            
             mBatch.end();
             
             mCamera.position.set(test.getPosition().x, test.getPosition().y, 0);
