@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 public class MainActivity  extends AndroidApplication {
     /** Called when the activity is first created. */
@@ -44,11 +45,12 @@ public class MainActivity  extends AndroidApplication {
             mCamera = new OrthographicCamera(28, 20);
             mCamera.update();
             mBatch = new SpriteBatch();
+            
+            // === TEST PHYSIQUE
+            // On créé un sol
+            PhysicsController.getInstance().createEdge(BodyType.StaticBody, -50, -10, 50, -10, 0);
            
             Gdx.input.setInputProcessor(this);
-            
-            
-            
         }
 
         @Override
@@ -61,6 +63,9 @@ public class MainActivity  extends AndroidApplication {
             Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
             PhysicsController.getInstance().update();
             
+            // Affiche les éléments physiques (pour débug)
+            PhysicsController.getInstance().drawDebug(mCamera.combined);
+            
             mBatch.begin();
             
             //render all du chara controller
@@ -72,6 +77,8 @@ public class MainActivity  extends AndroidApplication {
             
             mCamera.position.set(test.getPosition().x, test.getPosition().y, 0);
             mCamera.update();
+            
+            
         }
 
         @Override
