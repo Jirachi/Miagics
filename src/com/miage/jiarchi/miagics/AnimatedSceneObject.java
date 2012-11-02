@@ -5,11 +5,10 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector3;
 
-public class AnimatedObjects extends StaticSceneObject {
+public class AnimatedSceneObject extends StaticSceneObject {
 	protected Texture mTexture;
-	protected Vector3 mProjection;
+	
 	protected TextureRegion mRegion;
 	protected TextureRegion[][] mTmp;
 	protected float mTempsAccumule;
@@ -19,9 +18,9 @@ public class AnimatedObjects extends StaticSceneObject {
 	private static final int FRAME_COLS = 3;
 	private static final int FRAME_ROWS = 9; 
 	
-	public AnimatedObjects(String refName, String path) {
+	public AnimatedSceneObject(String refName, String path) {
 		super(refName, path);
-		mProjection = new Vector3();
+		
 		mTexture = new Texture(Gdx.files.internal(path));
 		mRegion = new TextureRegion(mTexture, 0, 0, 50, 86);
 		

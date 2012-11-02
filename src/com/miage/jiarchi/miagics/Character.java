@@ -17,12 +17,12 @@ public class Character {
 	protected float mTempsAccumule;
 	protected float mMoveSpeed = 20.0f;
 
-	//attributs d'animation
+	// attributs d'animation
 	protected TextureRegion mRegion;
 	protected TextureRegion[][] mTmp;
 	protected int mOppose;
 
-	//indices courants
+	// indices courants
 	protected int mCurrentColumn;
 	protected int mCurrentLine;
 
@@ -50,6 +50,10 @@ public class Character {
 		mTmp = TextureRegion.split(mTexture, mTexture.getWidth() / FRAME_COLS, mTexture.getHeight() / FRAME_ROWS);
 	}
 
+	/**
+	 * Définit dans quel sens le personnage doit se déplacer chaque frame
+	 * @param direction
+	 */
 	public void setMoveDirection(int direction) {
 	    if (direction != MOVE_NOT && mOppose != direction) {
 	        // On tourne les textures puisqu'on va dans l'autre sens
@@ -60,10 +64,19 @@ public class Character {
 	    mMoveDirection = direction;
 	}
 
+	/**
+	 * Retourne la position dans la scène de l'objet
+	 * @return Position
+	 */
 	public Vector2 getPosition() {
 		return mPosition;
 	}
 
+	/**
+	 * Dessine le personnage
+	 * @param batch
+	 * @param cam
+	 */
 	public void render(SpriteBatch batch, Camera cam) {
 		update(Gdx.graphics.getDeltaTime());
 		cam.project(mProjection.set(mPosition.x, mPosition.y, 0));
@@ -71,6 +84,11 @@ public class Character {
 		batch.draw(this.mTmp[mCurrentLine][mCurrentColumn], mProjection.x, mProjection.y, (56), 80);
 	}
 
+	/**
+	 * Met à jour le personnage
+	 * @note Appelé par render()
+	 * @param timeDelta
+	 */
 	public void update(float timeDelta) {
 		mTempsAccumule += timeDelta;
 		

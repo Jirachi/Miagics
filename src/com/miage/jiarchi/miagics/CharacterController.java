@@ -8,31 +8,65 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class CharacterController {
-	protected static CharacterController mSingleton;
+	private static CharacterController mSingleton = null;
+	
 	protected List<Character> mCharacters;
 	protected Player mSelf;
 	
+	/**
+	 * Renvoie l'instance unique de la classe
+	 * @return
+	 */
+	public static CharacterController getInstance() {
+	    if (mSingleton == null) {
+	        mSingleton = new CharacterController();
+	    }
+	    
+	    return mSingleton;
+	}
 	
-	public CharacterController(){
+	/**
+	 * Constructeur
+	 */
+	private CharacterController(){
 		mCharacters = new ArrayList<Character>();
 		mSingleton=null;
 		mSelf=null;
 		
 	}
-	
-	
-	public Player getSelf(){
+
+	/**
+	 * @return Le joueur en lui-même
+	 */
+	public Player getSelf() {
 		return mSelf;
 	}
 	
-	public void renderAll(SpriteBatch mBatch, Camera mCamera){
+	/**
+	 * Définit le joueur (soi-même)
+	 * @param p Moi :D
+	 */
+	public void setSelf(Player p) {
+	    mSelf = p;
+	}
+	
+	/**
+	 * Effectue le rendu de tous les personnages
+	 * @param batch
+	 * @param camera
+	 */
+	public void renderAll(SpriteBatch batch, Camera camera) {
 		for(int i=0;i<mCharacters.size();i++){
-			mCharacters.get(i).render(mBatch, mCamera);
+			mCharacters.get(i).render(batch, camera);
 		}
 	}
 	
-	public void addCharacter(Character mChara){
-		mCharacters.add(mChara);		
+	/**
+	 * Ajoute un personnage au contrôleur
+	 * @param chara
+	 */
+	public void addCharacter(Character chara) {
+		mCharacters.add(chara);
 	}	
 	
 }
