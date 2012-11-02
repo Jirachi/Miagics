@@ -1,4 +1,4 @@
-package com.miage.jiarchi.miagics;
+package com.miage.jirachi.miagics;
 import android.os.Bundle;
 
 import com.badlogic.gdx.ApplicationListener;
@@ -24,6 +24,9 @@ public class MainActivity  extends AndroidApplication {
         config.useWakelock = true;
         config.useGL20 = true;
         initialize(new GameClient(), config);
+        
+        /*FileHandle handle = Gdx.files.internal("data/myfile.txt");*/
+        
     }
 
     Character test;
