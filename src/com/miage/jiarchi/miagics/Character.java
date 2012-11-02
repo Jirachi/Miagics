@@ -7,6 +7,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 public class Character {
 	protected Texture mTexture;
@@ -16,6 +22,11 @@ public class Character {
 
 	protected float mTempsAccumule;
 	protected float mMoveSpeed = 20.0f;
+	
+	// propriétés physiques
+	protected Body mPhysicsBody;
+	protected Fixture mPhysicsChestFixture;
+	protected Fixture mPhysicsSensorFixture;
 
 	// attributs d'animation
 	protected TextureRegion mRegion;
@@ -45,7 +56,8 @@ public class Character {
 		mRegion = new TextureRegion(mTexture, 0, 0, 50, 86);
 		mPosition = new Vector2(-5,-5);
 		mProjection = new Vector3();
-		// mBody = new body
+		
+		buildPhysicsBody();
 
 		mTmp = TextureRegion.split(mTexture, mTexture.getWidth() / FRAME_COLS, mTexture.getHeight() / FRAME_ROWS);
 	}
@@ -123,12 +135,56 @@ public class Character {
 	/**
 	 * Mirroir horizontal des textures
 	 */
-	public void flipTextures() {
+	protected void flipTextures() {
 		for (int i = 0; i < mTmp.length; i++) {
 			for (int j = 0; j < mTmp[i].length; j++) {
 				this.mTmp[i][j].flip(true, false);
 			}
 		}
-		
+	}
+	
+	/**
+	 * Créée les propriétés physiques du personnage
+	 */
+	protected void buildPhysicsBody() {
+	    // Définition de l'ensemble du corps
+	    BodyDef def = new BodyDef();
+	    
+	    // C'est un corps dynamique (qui bouge :3)
+        def.type = BodyType.DynamicBody;
+        
+        // On créé le conteneur
+        mPhysicsBody = PhysicsController.getInstance().getWorld().createBody(def);
+ 
+        // On définit ensuite deux composantes du corps : une boite pour le torse,
+        // et un cercle pour les pieds (afin d'éviter de rester coincé face à des petits
+        // obstacles).
+        PolygonShape poly = new PolygonShape();
+        
+        // TODO: Taille de la boite variable en fonction de la taille réelle
+        // du personnage
+        poly.setAsBox(0.45f, 1.4f);
+        mPhysicsChestFixture = mPhysicsBody.createFixture(poly, 1);
+        
+        // On libère les ressources
+        poly.dispose();         
+ 
+        // Même chose pour les pieds :3
+        CircleShape circle = new CircleShape();     
+        circle.setRadius(0.45f);
+        
+        // On place les pieds en dessous du torse
+        circle.setPosition(new Vector2(0, -1.4f));
+        
+        mPhysicsSensorFixture = mPhysicsBody.createFixture(circle, 0);     
+        circle.dispose();       
+ 
+        // On active la détection continue des collisions
+        // Cela permet d'être sûr que le joueur ne va pas traverser des murs
+        // ou autres si il se déplace très vite.
+        mPhysicsBody.setBullet(true);
+        
+        // On empêche le personnage de faire des rotations impromptues
+        mPhysicsBody.setFixedRotation(true);
 	}
 }
