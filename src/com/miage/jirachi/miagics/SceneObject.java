@@ -1,4 +1,4 @@
-package com.miage.jiarchi.miagics;
+package com.miage.jirachi.miagics;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;

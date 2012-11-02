@@ -1,4 +1,4 @@
-package com.miage.jiarchi.miagics;
+package com.miage.jirachi.miagics;
 
 import java.util.List;
 
