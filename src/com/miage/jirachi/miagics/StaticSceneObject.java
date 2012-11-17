@@ -17,55 +17,69 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class StaticSceneObject extends SceneObject {
-	protected Texture mTexture;
+	//protected Texture mTexture;
 	//correspond au model
 	protected Body objectModel;
 	protected Vector2 objectModelOrigin;
 	
 	//render
 	protected Sprite objectSprite;
-	private Texture objectTexture;
+	protected Texture objectTexture;
 	
 	public StaticSceneObject(String refName, String path) {
 		super(refName);
-		mTexture = new Texture(Gdx.files.internal(path));
+		//mTexture = new Texture(Gdx.files.internal(path));
+		createBottle();	
+		
+		createSprites();
+	}
+	
+	private void createBottle(){
 		
 		BodyEditorLoader loader = new BodyEditorLoader(Gdx.files.internal("data/test.json"));
 		//code aurelien
+		
 		BodyDef bd = new BodyDef();
-		bd.position.set(5,0);
+		
+		//bd.position.set(5,-10);
 		bd.type=BodyType.DynamicBody;
 		
 		
 		FixtureDef fd = new FixtureDef();
-		fd.density = 50;
+		fd.density = 1;
 		fd.friction = 1f;
 		//fd.restitution=0.9f;
 		
-		World world = PhysicsController.getInstance().getWorld();
-		objectModel = world.createBody(bd);
+		objectModel = PhysicsController.getInstance().getWorld().createBody(bd);
+		
 		loader.attachFixture(objectModel, "test01", fd,8f );
-		objectModelOrigin = loader.getOrigin("test01", 8).cpy();
-		
+		objectModelOrigin = loader.getOrigin("test01", 8f).cpy();
 	}
-	/*
-	private void createObject(){
-		
 	
-	}*/
-
-	public void render(SpriteBatch batch, Camera cam){
-		//objectTexture = new Texture(Gdx.files.internal("data/test.png"));
-		/*objectTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-
+	
+	private void createSprites(){
+		objectTexture = new Texture(Gdx.files.internal("data/test/test.png"));
+		objectTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		
 		objectSprite = new Sprite(objectTexture);
-		objectSprite.setSize(8, 8*objectSprite.getHeight()/objectSprite.getWidth());
-		Vector2 bottlePos = objectModel.getPosition().sub(objectModelOrigin);
+		objectSprite.setSize(8f, 8f*objectSprite.getHeight()/objectSprite.getWidth());
+	}
+	public void render(SpriteBatch batch, Camera cam){
+		
+		mPosition = objectModel.getPosition();
+		cam.project(mProjection.set(mPosition.x, mPosition.y,0));
+		
+		Vector2 bottlePos = objectModel.getPosition();
 		objectSprite.setPosition(bottlePos.x, bottlePos.y);
-		objectSprite.setOrigin(objectModelOrigin.x, objectModelOrigin.y);*/
-		//objectSprite.setRotation(objectModel.getAngle() * MathUtils.radiansToDegrees);
-		cam.project(mProjection.set(mPosition.x, mPosition.y, 0));
-		batch.draw(mTexture, mProjection.x, mProjection.y , 110, 130);
+		objectSprite.setOrigin(objectModelOrigin.x, objectModelOrigin.y);
+		objectSprite.setRotation(objectModel.getAngle() * MathUtils.radiansToDegrees);
+		
+		
+		
+		
+		batch.draw(objectSprite, mProjection.x, mProjection.y,256,256);
+		//objectSprite.draw(batch)	;
+		//batch.draw(objectTexture, mProjection.x, mProjection.y , 256, 256);
 	}
 
 }
