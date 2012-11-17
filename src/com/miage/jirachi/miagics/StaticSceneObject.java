@@ -52,8 +52,8 @@ public class StaticSceneObject extends SceneObject {
 		
 		objectModel = PhysicsController.getInstance().getWorld().createBody(bd);
 		
-		loader.attachFixture(objectModel, "test01", fd,8f );
-		objectModelOrigin = loader.getOrigin("test01", 8f).cpy();
+		loader.attachFixture(objectModel, "test01", fd, 8.0f );
+		objectModelOrigin = loader.getOrigin("test01", 8.0f).cpy();
 	}
 	
 	
@@ -69,16 +69,17 @@ public class StaticSceneObject extends SceneObject {
 		mPosition = objectModel.getPosition();
 		cam.project(mProjection.set(mPosition.x, mPosition.y,0));
 		
-		Vector2 bottlePos = objectModel.getPosition();
-		objectSprite.setPosition(bottlePos.x, bottlePos.y);
+		//Vector2 bottlePos = objectModel.getPosition();
+		objectSprite.setPosition(mProjection.x, mProjection.y);
+		objectSprite.setScale(38.0f);
 		objectSprite.setOrigin(objectModelOrigin.x, objectModelOrigin.y);
 		objectSprite.setRotation(objectModel.getAngle() * MathUtils.radiansToDegrees);
 		
 		
 		
 		
-		batch.draw(objectSprite, mProjection.x, mProjection.y,256,256);
-		//objectSprite.draw(batch)	;
+		//batch.draw(objectSprite, mProjection.x, mProjection.y,0.0f,0.0f,256,256,1.0f,1.0f, objectModel.getAngle() * 3.1415f);
+		objectSprite.draw(batch)	;
 		//batch.draw(objectTexture, mProjection.x, mProjection.y , 256, 256);
 	}
 
