@@ -39,8 +39,8 @@ public class MainActivity  extends AndroidApplication {
         @Override
         public void create() {
             test = new Character();
-            test2 =  new StaticSceneObject("","animated/fox.png");
-            test3 = new AnimatedSceneObject("","animated/droid_from_android.png");
+            test2 =  new StaticSceneObject("","data/test.png");
+            //test3 = new AnimatedSceneObject("","animated/droid_from_android.png");
             
             //ajout ici des characters dans la liste (dans characontroller)
             CharacterController.getInstance().addCharacter(test);
@@ -74,7 +74,7 @@ public class MainActivity  extends AndroidApplication {
             //render all du chara controller
             CharacterController.getInstance().renderAll(mBatch, mCamera);
             test2.render(mBatch, mCamera);
-            test3.render(mBatch, mCamera);
+            //test3.render(mBatch, mCamera);
             
             mBatch.end();
             
