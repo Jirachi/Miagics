@@ -1,23 +1,30 @@
 package com.miage.jirachi.miagics;
 
 public class PacketMaker {
-    public static BitStream makeMovePacket(short direction) {
-        BitStream data = new BitStream();
+	public static Packet makeBootMe() {
+		Packet packet = new Packet();
+		packet.opcode = Opcodes.CMSG_BOOTME;
+		
+		return packet;
+	}
+	
+    public static Packet makeMovePacket(short direction) {
+    	Packet packet = new Packet();
         
         switch (direction) {
         case Character.MOVE_LEFT:
-            data.write(Opcodes.CMSG_MOVE_LEFT);
+            packet.opcode = Opcodes.CMSG_MOVE_LEFT;
             break;
             
         case Character.MOVE_RIGHT:
-            data.write(Opcodes.CMSG_MOVE_RIGHT);
+        	packet.opcode = Opcodes.CMSG_MOVE_RIGHT;
             break;
             
         case Character.MOVE_NOT:
-            data.write(Opcodes.CMSG_MOVE_STOP);
+        	packet.opcode = Opcodes.CMSG_MOVE_STOP;
             break;
         }
         
-        return data;
+        return packet;
     }
 }
