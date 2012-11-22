@@ -1,5 +1,8 @@
 package com.miage.jirachi.miagics;
+import java.io.IOException;
+
 import android.os.Bundle;
+import android.util.Log;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
@@ -53,6 +56,12 @@ public class MainActivity  extends AndroidApplication {
             // On crŽŽ un sol
             PhysicsController.getInstance().createEdge(BodyType.StaticBody, -50, -10, 50, -10, 0);
            
+            // === RESEAU
+            try {
+                NetworkController.getInstance().connect("192.168.0.10", 37153);
+            } catch (IOException e) {
+                Log.e("Reseau", e.getMessage());
+            }
             Gdx.input.setInputProcessor(this);
         }
 
