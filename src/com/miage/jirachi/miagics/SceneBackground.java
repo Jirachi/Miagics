@@ -10,38 +10,39 @@ import com.badlogic.gdx.math.Vector3;
 public class SceneBackground {
 	
 	protected Texture mBackgroundTexture;
-	protected Vector2 testCam;
-	protected Vector2 positionPrecedente;
-	protected Vector3 mProjection;
+	protected Vector2 mPosBGLeft;
+	protected Vector2 mPosBGRight;
+	protected Vector3 mProjectionL;
+	protected Vector3 mProjectionR;
+	protected float mProfondeur;
 	
 	public SceneBackground(String path) {
 		mBackgroundTexture = new Texture(Gdx.files.internal(path));
-		testCam = new Vector2();
-		testCam.x=0;
-		testCam.y=0;
-		positionPrecedente = new Vector2();
-		positionPrecedente.x=0;
-		positionPrecedente.y=0;
-		//positionPrecedente = new Camera();
-		
+		mPosBGRight = new Vector2(-400,-200.5f);
+		mPosBGLeft = new Vector2(-800,-200.5f);
+		mProfondeur = 0;
 	}
 	
 	
 public void render(SpriteBatch batch, Camera cam){
 		
-			mProjection = new Vector3();
+			mProjectionL = new Vector3();
+			mProjectionR = new Vector3();
 			//testCam.x= testCam.x - (cam.position.x - positionPrecedente.x);
-			cam.project(mProjection.set(testCam.x, testCam.y,0));
-			
-			positionPrecedente.x = cam.position.x;
-	
-		
-		
+			cam.project(mProjectionR.set(mPosBGRight.x, mPosBGRight.y,0));
+			cam.project(mProjectionL.set(mPosBGLeft.x, mPosBGLeft.y,0));
+			//mProjectionL.x=mProjectionR.x-mBackgroundTexture.getWidth();
+		/*	
+		if(mProjectionL.x>0){
+			mProjectionR.x=mProjectionL.x-mBackgroundTexture.getWidth();
+			//cam.project(mProjectionR.set(mPosBGRight.x, mPosBGRight.y,0));
+		}
+		*/
 		
 		//batch.draw(objectSprite, mProjection.x, mProjection.y,0.0f,0.0f,256,256,1.0f,1.0f, objectModel.getAngle() * 3.1415f);
 		//objectSprite.draw(batch)	;
-		batch.draw(mBackgroundTexture, mProjection.x, 0);
-		
+		batch.draw(mBackgroundTexture, mProjectionR.x, mProjectionR.y,mBackgroundTexture.getWidth()*MainActivity.PPX,mBackgroundTexture.getHeight()*MainActivity.PPY);
+		batch.draw(mBackgroundTexture, mProjectionL.x, mProjectionL.y,mBackgroundTexture.getWidth()*MainActivity.PPX,mBackgroundTexture.getHeight()*MainActivity.PPY);
 	}
 
 

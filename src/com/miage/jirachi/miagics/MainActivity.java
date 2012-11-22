@@ -17,11 +17,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 public class MainActivity  extends AndroidApplication {
+	public static float PPX;
+	public static float PPY;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
+        
+		
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         config.useAccelerometer = true;
         config.useCompass = false;
@@ -43,6 +47,8 @@ public class MainActivity  extends AndroidApplication {
     public class GameClient implements ApplicationListener, InputProcessor {		
         @Override
         public void create() {
+        	PPX = (float)Gdx.graphics.getWidth() / 800.f;
+    		PPY = (float)Gdx.graphics.getHeight() / 480.f;
             test = new Character();
             test2 =  new StaticSceneObject("","data/test.png");
             //test3 = new AnimatedSceneObject("","animated/droid_from_android.png");
@@ -51,13 +57,13 @@ public class MainActivity  extends AndroidApplication {
             //ajout ici des characters dans la liste (dans characontroller)
             CharacterController.getInstance().addCharacter(test);
             
-            mCamera = new OrthographicCamera(28, 20);
+            mCamera = new OrthographicCamera(800, 480);
             mCamera.update();
             mBatch = new SpriteBatch();
             
             // === TEST PHYSIQUE
             // On créé un sol
-            PhysicsController.getInstance().createEdge(BodyType.StaticBody, -50, -10, 100, -10, 0);
+            PhysicsController.getInstance().createEdge(BodyType.StaticBody, -2000, -10, 1000, -10, 0);
            
             // === RESEAU
             try {
@@ -80,8 +86,8 @@ public class MainActivity  extends AndroidApplication {
             Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
             PhysicsController.getInstance().update();
             
-            // Affiche les éléments physiques (pour débug)
-            PhysicsController.getInstance().drawDebug(mCamera.combined);
+            
+            
         
             mBatch.begin();
           
@@ -90,12 +96,13 @@ public class MainActivity  extends AndroidApplication {
             //render all du chara controller
             CharacterController.getInstance().renderAll(mBatch, mCamera);
             
-            test2.render(mBatch, mCamera);
+           test2.render(mBatch, mCamera);
             //test3.render(mBatch, mCamera);
             
             mBatch.end();
-            
-            mCamera.position.set(test.getPosition().x, test.getPosition().y, 0);
+         // Affiche les éléments physiques (pour débug)
+            PhysicsController.getInstance().drawDebug(mCamera.combined);
+            mCamera.position.set(test.getPosition().x, test.getPosition().y+5, 0);
             mCamera.update();
             
             
