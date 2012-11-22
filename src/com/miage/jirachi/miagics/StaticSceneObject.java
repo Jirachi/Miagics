@@ -41,7 +41,7 @@ public class StaticSceneObject extends SceneObject {
 		
 		BodyDef bd = new BodyDef();
 		
-		bd.position.set(10,-10);
+		bd.position.set(900,-10);
 		bd.type=BodyType.DynamicBody;
 		
 		FixtureDef fd = new FixtureDef();

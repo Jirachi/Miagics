@@ -63,7 +63,7 @@ public class MainActivity  extends AndroidApplication {
             
             // === TEST PHYSIQUE
             // On crŽŽ un sol
-            PhysicsController.getInstance().createEdge(BodyType.StaticBody, -200, -10, 100, -10, 0);
+            PhysicsController.getInstance().createEdge(BodyType.StaticBody, -2000, -10, 1000, -10, 0);
            
             // === RESEAU
             try {
