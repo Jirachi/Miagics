@@ -66,11 +66,14 @@ public class MainActivity  extends AndroidApplication {
             PhysicsController.getInstance().createEdge(BodyType.StaticBody, -2000, -10, 1000, -10, 0);
            
             // === RESEAU
+            /*
             try {
                 NetworkController.getInstance().connect("192.168.0.10", 37153);
             } catch (IOException e) {
                 Log.e("Reseau", e.getMessage());
             }
+            */
+            
             Gdx.input.setInputProcessor(this);
         }
         
