@@ -20,12 +20,12 @@ import com.badlogic.gdx.physics.box2d.WorldManifold;
 
 public class Character {
 	protected Texture mTexture;
-	protected int mMoveDirection;
+	protected int mMoveDirection = MOVE_NOT;
 	protected Vector2 mPosition;
 	protected Vector3 mProjection;
 
 	protected float mTempsAccumule;
-	protected float mMoveSpeed = 600.0f;
+	protected float mMoveSpeed = 400.0f;
 	
 	// propriŽtŽs physiques
 	protected Body mPhysicsBody;
@@ -57,7 +57,7 @@ public class Character {
 	 */
 	public Character() {
 		mTempsAccumule=0;
-		mOppose=1;
+		mOppose = MOVE_RIGHT;
 		mTexture = new Texture(Gdx.files.internal("animated/droid_from_android.png"));
 		mRegion = new TextureRegion(mTexture, 0, 0, 50, 86);
 		mPosition = new Vector2(-5,-5);
@@ -174,8 +174,8 @@ public class Character {
             // Si on ne bouge pas et si on est arr�tŽ depuis 200ms, on rapplique les frottements
             // au sol
             if(mMoveDirection == MOVE_NOT && mStillTime > 0.2) {
-                mPhysicsChestFixture.setFriction(100f);
-                mPhysicsSensorFixture.setFriction(100f);
+                mPhysicsChestFixture.setFriction(200f);
+                mPhysicsSensorFixture.setFriction(200f);
             }
             else {
                 // Sinon on garde un frottement minimal
@@ -186,12 +186,12 @@ public class Character {
  
         // Si on va a gauche et qu'on est pas dŽjˆ ˆ la vitesse max
         if(mMoveDirection == MOVE_LEFT && vel.x > -mMoveSpeed) {
-            mPhysicsBody.applyLinearImpulse(-mMoveSpeed, 0, mPhysicsBody.getWorldCenter().x, mPhysicsBody.getWorldCenter().y);
+            mPhysicsBody.applyLinearImpulse(-mMoveSpeed / 4.0f, 0, mPhysicsBody.getWorldCenter().x, mPhysicsBody.getWorldCenter().y);
         } 
  
         // Si on va a droite et qu'on est pas dŽjˆ ˆ la vitesse max
         if(mMoveDirection == MOVE_RIGHT && vel.x < mMoveSpeed) {
-            mPhysicsBody.applyLinearImpulse(mMoveSpeed, 0, mPhysicsBody.getWorldCenter().x, mPhysicsBody.getWorldCenter().y);
+            mPhysicsBody.applyLinearImpulse(mMoveSpeed / 4.0f, 0, mPhysicsBody.getWorldCenter().x, mPhysicsBody.getWorldCenter().y);
         }
 	}
 
