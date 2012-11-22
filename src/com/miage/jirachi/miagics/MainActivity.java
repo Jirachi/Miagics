@@ -80,24 +80,28 @@ public class MainActivity  extends AndroidApplication {
 
         @Override
         public void render() {
+            Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
         	NetworkController.getInstance().update();
-        	Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-        	PhysicsController.getInstance().update();
-
-        	mBatch.begin();
-
-        	backGTexture.render(mBatch,mCamera);
-        	//render all du chara controller
-        	CharacterController.getInstance().renderAll(mBatch, mCamera);
-
-        	test2.render(mBatch, mCamera);
-        	//test3.render(mBatch, mCamera);
-
-        	mBatch.end();
-        	// Affiche les éléments physiques (pour débug)
-        	PhysicsController.getInstance().drawDebug(mCamera.combined);
-        	mCamera.position.set(CharacterController.getInstance().getSelf().getPosition().x, CharacterController.getInstance().getSelf().getPosition().y+5, 0);
-        	mCamera.update();
+            PhysicsController.getInstance().update();
+            
+            
+            
+        
+            mBatch.begin();
+          
+            
+            backGTexture.render(mBatch,mCamera);
+            mCamera.position.set(test.getPosition().x, test.getPosition().y+5, 0);
+            mCamera.update();
+            //render all du chara controller
+            CharacterController.getInstance().renderAll(mBatch, mCamera);
+            
+           test2.render(mBatch, mCamera);
+            //test3.render(mBatch, mCamera);
+            
+            mBatch.end();
+         // Affiche les éléments physiques (pour débug)
+            PhysicsController.getInstance().drawDebug(mCamera.combined);
         }
 
         @Override
