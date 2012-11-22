@@ -36,18 +36,33 @@ public class CharacterController {
 	}
 
 	/**
-	 * @return Le joueur en lui-mme
+	 * @return Le joueur en lui-mÃªme
 	 */
 	public Player getSelf() {
 		return mSelf;
 	}
 	
 	/**
-	 * Dfinit le joueur (soi-mme)
+	 * DÅ½finit le joueur (soi-mÃªme)
 	 * @param p Moi :D
 	 */
 	public void setSelf(Player p) {
-	    mSelf = p;
+	    mCharacters.add(p);
+		mSelf = p;
+	    
+	}
+	
+	/**
+	 * Retourne le personnage ayant l'id rÃ©seau spÃ©cifiÃ©
+	 */
+	public Character getCharacter(long id) {
+		for (int i = 0; i < mCharacters.size(); i++) {
+			Character c = mCharacters.get(i);
+			if (c.getNetworkId() == id)
+				return c;
+		}
+		
+		return null;
 	}
 	
 	/**
@@ -62,7 +77,7 @@ public class CharacterController {
 	}
 	
 	/**
-	 * Ajoute un personnage au contr™leur
+	 * Ajoute un personnage au contrÃ´leur
 	 * @param chara
 	 */
 	public void addCharacter(Character chara) {

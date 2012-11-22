@@ -63,6 +63,13 @@ public class BitStream {
 		mByteBuffer_4 = ByteBuffer.allocate(4);
 		mByteBuffer_8 = ByteBuffer.allocate(8);
 	}
+	
+	public BitStream(LinkedList<Byte> list) {
+		mBytes = list;
+		mByteBuffer_2 = ByteBuffer.allocate(2);
+		mByteBuffer_4 = ByteBuffer.allocate(4);
+		mByteBuffer_8 = ByteBuffer.allocate(8);
+	}
 
 	/**
 	 * Initializes the bytes list with the provided byte array
@@ -98,24 +105,29 @@ public class BitStream {
 	 * Returns the final bytes
 	 */
 	public Byte[] getBytes() {
-		Byte[] bytes = new Byte[mBytes.size()];
+		Byte[] bytes = new Byte[mBytes.size()+1];
 		
 		for (int i = 0; i < mBytes.size(); i++) {
 			bytes[i] = mBytes.get(i);
 		}
 		
+		bytes[mBytes.size()] = '\n';
+		
 		return bytes;
 	}
 	
 	public byte[] getBytesP() {
-	    byte[] bytes = new byte[mBytes.size()];
+	    byte[] bytes = new byte[mBytes.size()+1];
 	    
 	    for (int i = 0; i < mBytes.size(); i++) {
             bytes[i] = mBytes.get(i);
         }
+	    
+	    bytes[mBytes.size()] = '\n';
         
         return bytes;
 	}
+	
 	
 	/**
 	 * Write an array of bytes to our final byte list
