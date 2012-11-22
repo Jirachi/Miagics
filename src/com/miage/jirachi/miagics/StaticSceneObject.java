@@ -28,8 +28,9 @@ public class StaticSceneObject extends SceneObject {
 	public StaticSceneObject(String refName, String path) {
 		super(refName);
 		//mTexture = new Texture(Gdx.files.internal(path));
-		createObject(path);	
 		createSprites();
+		createObject(path);	
+		
 	}
 	
 	
@@ -50,8 +51,8 @@ public class StaticSceneObject extends SceneObject {
 		
 		objectModel = PhysicsController.getInstance().getWorld().createBody(bd);
 		
-		loader.attachFixture(objectModel, "test01", fd, 8f);
-		objectModelOrigin = loader.getOrigin("test01", 8f).cpy();
+		loader.attachFixture(objectModel, "test01", fd, objectTexture.getWidth());
+		objectModelOrigin = loader.getOrigin("test01", objectTexture.getWidth()).cpy();
 	}
 	
 	
@@ -60,14 +61,15 @@ public class StaticSceneObject extends SceneObject {
 		objectTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		
 		objectSprite = new Sprite(objectTexture);
-		objectSprite.setSize(8f, 8f*objectSprite.getHeight()/objectSprite.getWidth());
-		objectSprite.setScale(39.0f);
+		objectSprite.setSize(objectTexture.getWidth()*MainActivity.PPX, objectTexture.getHeight()*MainActivity.PPY);
 	}
 	
 	
 	public void render(SpriteBatch batch, Camera cam){
 		mPosition = objectModel.getPosition();
-		cam.project(mProjection.set(mPosition.x, mPosition.y,0));
+		
+		Vector2 bottlePos = objectModel.getPosition().sub(objectModelOrigin);
+		cam.project(mProjection.set(bottlePos.x, bottlePos.y,0));
 		
 		objectSprite.setPosition(mProjection.x, mProjection.y);
 		objectSprite.setOrigin(objectModelOrigin.x, objectModelOrigin.y);

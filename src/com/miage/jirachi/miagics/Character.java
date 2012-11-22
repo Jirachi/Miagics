@@ -98,9 +98,9 @@ public class Character {
 	public void render(SpriteBatch batch, Camera cam) {
 		update(Gdx.graphics.getDeltaTime());
 		mPosition = mPhysicsBody.getPosition();
-		cam.project(mProjection.set(mPosition.x-0.5f, mPosition.y, 0));
+		cam.project(mProjection.set(mPosition.x-0.5f, mPosition.y, 0));		
 		
-		batch.draw(this.mTmp[mCurrentLine][mCurrentColumn], mProjection.x, mProjection.y, (56), 80);
+		batch.draw(this.mTmp[mCurrentLine][mCurrentColumn], mProjection.x, mProjection.y, 56f * MainActivity.PPX, 80f * MainActivity.PPY);
 	}
 
 	/**
