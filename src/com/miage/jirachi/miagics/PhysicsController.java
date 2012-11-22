@@ -44,9 +44,11 @@ public class PhysicsController {
      * Met ˆ jour la simulation physique
      */
     public void update() {
-        mPhysicsWorld.step(Gdx.graphics.getDeltaTime()/3.0f, 4, 4);
-        mPhysicsWorld.step(Gdx.graphics.getDeltaTime()/3.0f, 4, 4);
-        mPhysicsWorld.step(Gdx.graphics.getDeltaTime()/3.0f, 4, 4);
+        final int STEPS = 30;
+        
+        for (int i = 0; i < STEPS; i++) {
+            mPhysicsWorld.step(Gdx.graphics.getDeltaTime() / (float)STEPS, 6, 2);
+        }
     }
     
     /**

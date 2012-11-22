@@ -6,6 +6,6 @@ public class Player extends Character {
         super.setMoveDirection(direction);
         
         BitStream packet = PacketMaker.makeMovePacket((short)direction);
-        
+        NetworkController.getInstance().send(packet);
     }
 }
