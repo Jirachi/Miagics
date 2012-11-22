@@ -43,10 +43,10 @@ public class Character {
 	protected int mCurrentColumn;
 	protected int mCurrentLine;
 
-	public final static int MOVE_LEFT = -1;
-	public final static int MOVE_RIGHT = 1;
-	public final static int MOVE_TOP = 3;
-	public final static int MOVE_BOTTOM = 4;
+	public final static int MOVE_LEFT = 1;
+	public final static int MOVE_RIGHT = 2;
+	/*public final static int MOVE_TOP = 3;
+	public final static int MOVE_BOTTOM = 4;*/
 	public final static int MOVE_NOT = 0;
 
 	private static final int        FRAME_COLS = 3;         // #1
