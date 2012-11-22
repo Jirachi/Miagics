@@ -3,6 +3,8 @@ package com.miage.jirachi.miagics;
 import java.io.IOException;
 import java.net.Socket;
 
+import android.util.Log;
+
 public class NetworkController {
     private static NetworkController mSingleton = null;
     private Socket mSocket;
@@ -32,5 +34,13 @@ public class NetworkController {
     
     public void update() {
         
+    }
+    
+    public void send(BitStream packet) {
+        try {
+            mSocket.getOutputStream().write(packet.getBytesP());
+        } catch (IOException e) {
+            Log.e("Reseau", "Impossible d'envoyer un packet!");
+        }
     }
 }
