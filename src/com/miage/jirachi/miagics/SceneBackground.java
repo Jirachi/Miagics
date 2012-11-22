@@ -18,8 +18,8 @@ public class SceneBackground {
 	
 	public SceneBackground(String path) {
 		mBackgroundTexture = new Texture(Gdx.files.internal(path));
-		mPosBGRight = new Vector2(0,-13.5f);
-		mPosBGLeft = new Vector2(-28,-13.5f);
+		mPosBGRight = new Vector2(-400,-200.5f);
+		mPosBGLeft = new Vector2(-800,-200.5f);
 		mProfondeur = 0;
 	}
 	

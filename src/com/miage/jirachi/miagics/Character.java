@@ -25,7 +25,7 @@ public class Character {
 	protected Vector3 mProjection;
 
 	protected float mTempsAccumule;
-	protected float mMoveSpeed = 20.0f;
+	protected float mMoveSpeed = 600.0f;
 	
 	// propriŽtŽs physiques
 	protected Body mPhysicsBody;
@@ -155,6 +155,7 @@ public class Character {
             vel.x = Math.signum(vel.x) * mMoveSpeed;
             mPhysicsBody.setLinearVelocity(vel.x, vel.y);
         }
+        
  
         // On calcule le temps qu'on a passŽ sans bouger, et on applique l'inertie (90%)
         if (mMoveDirection == MOVE_NOT) {         
@@ -185,12 +186,12 @@ public class Character {
  
         // Si on va a gauche et qu'on est pas dŽjˆ ˆ la vitesse max
         if(mMoveDirection == MOVE_LEFT && vel.x > -mMoveSpeed) {
-            mPhysicsBody.applyLinearImpulse(-2f, 0, pos.x, pos.y);
+            mPhysicsBody.applyLinearImpulse(-mMoveSpeed, 0, mPhysicsBody.getWorldCenter().x, mPhysicsBody.getWorldCenter().y);
         } 
  
         // Si on va a droite et qu'on est pas dŽjˆ ˆ la vitesse max
         if(mMoveDirection == MOVE_RIGHT && vel.x < mMoveSpeed) {
-            mPhysicsBody.applyLinearImpulse(2f, 0, pos.x, pos.y);
+            mPhysicsBody.applyLinearImpulse(mMoveSpeed, 0, mPhysicsBody.getWorldCenter().x, mPhysicsBody.getWorldCenter().y);
         }
 	}
 
