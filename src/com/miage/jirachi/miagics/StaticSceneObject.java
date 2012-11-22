@@ -29,26 +29,27 @@ public class StaticSceneObject extends SceneObject {
 	public StaticSceneObject(String refName, String path) {
 		super(refName);
 		//mTexture = new Texture(Gdx.files.internal(path));
-		createBottle();	
+		createObject(path);	
 		
 		createSprites();
 	}
 	
-	private void createBottle(){
-		
+	
+	private void createObject(String path){
+		//changer les chaines de caracteres par l'argument.
 		BodyEditorLoader loader = new BodyEditorLoader(Gdx.files.internal("data/test.json"));
 		//code aurelien
 		
 		BodyDef bd = new BodyDef();
 		
-		//bd.position.set(5,-10);
+		bd.position.set(10,-10);
 		bd.type=BodyType.DynamicBody;
 		
 		
 		FixtureDef fd = new FixtureDef();
-		fd.density = 1;
+		fd.density = 50;
 		fd.friction = 1f;
-		//fd.restitution=0.9f;
+		fd.restitution=0f;
 		
 		objectModel = PhysicsController.getInstance().getWorld().createBody(bd);
 		

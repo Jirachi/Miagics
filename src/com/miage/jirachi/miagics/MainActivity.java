@@ -9,6 +9,7 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
@@ -31,6 +32,7 @@ public class MainActivity  extends AndroidApplication {
 
     Character test;
     SceneObject test2;
+    SceneBackground backGTexture;
     AnimatedSceneObject test3;
     Camera mCamera;
     SpriteBatch mBatch;    
@@ -41,6 +43,7 @@ public class MainActivity  extends AndroidApplication {
             test = new Character();
             test2 =  new StaticSceneObject("","data/test.png");
             //test3 = new AnimatedSceneObject("","animated/droid_from_android.png");
+            backGTexture = new SceneBackground("data/background/decor1.png");
             
             //ajout ici des characters dans la liste (dans characontroller)
             CharacterController.getInstance().addCharacter(test);
@@ -51,11 +54,13 @@ public class MainActivity  extends AndroidApplication {
             
             // === TEST PHYSIQUE
             // On créé un sol
-            PhysicsController.getInstance().createEdge(BodyType.StaticBody, -50, -10, 50, -10, 0);
+            PhysicsController.getInstance().createEdge(BodyType.StaticBody, -50, -10, 100, -10, 0);
            
             Gdx.input.setInputProcessor(this);
         }
-
+        
+        //test de background a virer si ne marche pas
+    
         @Override
         public void resize(int width, int height) {
             // TODO Auto-generated method stub
@@ -68,11 +73,14 @@ public class MainActivity  extends AndroidApplication {
             
             // Affiche les éléments physiques (pour débug)
             PhysicsController.getInstance().drawDebug(mCamera.combined);
-            
+        
             mBatch.begin();
+          
             
+            backGTexture.render(mBatch,mCamera);
             //render all du chara controller
             CharacterController.getInstance().renderAll(mBatch, mCamera);
+            
             test2.render(mBatch, mCamera);
             //test3.render(mBatch, mCamera);
             

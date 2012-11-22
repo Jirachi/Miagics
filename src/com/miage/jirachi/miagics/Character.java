@@ -27,7 +27,7 @@ public class Character {
 	protected float mTempsAccumule;
 	protected float mMoveSpeed = 20.0f;
 	
-	// propriŽtŽs physiques
+	// propriÅ½tÅ½s physiques
 	protected Body mPhysicsBody;
 	protected Fixture mPhysicsChestFixture;
 	protected Fixture mPhysicsSensorFixture;
@@ -69,7 +69,7 @@ public class Character {
 	}
 
 	/**
-	 * DŽfinit dans quel sens le personnage doit se dŽplacer chaque frame
+	 * DÅ½finit dans quel sens le personnage doit se dÅ½placer chaque frame
 	 * @param direction
 	 */
 	public void setMoveDirection(int direction) {
@@ -83,7 +83,7 @@ public class Character {
 	}
 
 	/**
-	 * Retourne la position dans la scne de l'objet
+	 * Retourne la position dans la scï¿½ne de l'objet
 	 * @return Position
 	 */
 	public Vector2 getPosition() {
@@ -98,14 +98,14 @@ public class Character {
 	public void render(SpriteBatch batch, Camera cam) {
 		update(Gdx.graphics.getDeltaTime());
 		mPosition = mPhysicsBody.getPosition();
-		cam.project(mProjection.set(mPosition.x, mPosition.y, 0));
+		cam.project(mProjection.set(mPosition.x-0.5f, mPosition.y, 0));
 		
 		batch.draw(this.mTmp[mCurrentLine][mCurrentColumn], mProjection.x, mProjection.y, (56), 80);
 	}
 
 	/**
-	 * Met ˆ jour le personnage
-	 * @note AppelŽ par render()
+	 * Met Ë† jour le personnage
+	 * @note AppelÅ½ par render()
 	 * @param timeDelta
 	 */
 	public void update(float timeDelta) {
@@ -125,7 +125,7 @@ public class Character {
 			break;
 		}
 
-		// Mise ˆ jour de l'animation
+		// Mise Ë† jour de l'animation
 		if (mTempsAccumule > 0.1f) {
             mCurrentColumn++;
             mTempsAccumule = 0;
@@ -135,13 +135,13 @@ public class Character {
             }
         }
 
-		// Mise ˆ jour des propriŽtŽs physiques
+		// Mise Ë† jour des propriÅ½tÅ½s physiques
         Vector2 vel = mPhysicsBody.getLinearVelocity();
         Vector2 pos = mPhysicsBody.getPosition();     
         boolean grounded = isTouchingGround();
         
-        // On estime tre sur le sol si on le touche, ou si on l'a
-        // rŽcemment touchŽ pour compenser le manque de prŽcision
+        // On estime ï¿½tre sur le sol si on le touche, ou si on l'a
+        // rÅ½cemment touchÅ½ pour compenser le manque de prÅ½cision
         if (grounded) {
             mLastGroundTime = System.nanoTime();
         } else {
@@ -150,13 +150,13 @@ public class Character {
             }
         }
  
-        // On limite la vitesse de mouvement ˆ la vitesse max
+        // On limite la vitesse de mouvement Ë† la vitesse max
         if (Math.abs(vel.x) > mMoveSpeed) {            
             vel.x = Math.signum(vel.x) * mMoveSpeed;
             mPhysicsBody.setLinearVelocity(vel.x, vel.y);
         }
  
-        // On calcule le temps qu'on a passŽ sans bouger, et on applique l'inertie (90%)
+        // On calcule le temps qu'on a passÅ½ sans bouger, et on applique l'inertie (90%)
         if (mMoveDirection == MOVE_NOT) {         
             mStillTime += Gdx.graphics.getDeltaTime();
             mPhysicsBody.setLinearVelocity(vel.x * 0.9f, vel.y);
@@ -170,7 +170,7 @@ public class Character {
             mPhysicsChestFixture.setFriction(0f);
             mPhysicsSensorFixture.setFriction(0f);            
         } else {
-            // Si on ne bouge pas et si on est arrtŽ depuis 200ms, on rapplique les frottements
+            // Si on ne bouge pas et si on est arrï¿½tÅ½ depuis 200ms, on rapplique les frottements
             // au sol
             if(mMoveDirection == MOVE_NOT && mStillTime > 0.2) {
                 mPhysicsChestFixture.setFriction(100f);
@@ -183,12 +183,12 @@ public class Character {
             }
         }       
  
-        // Si on va a gauche et qu'on est pas dŽjˆ ˆ la vitesse max
+        // Si on va a gauche et qu'on est pas dÅ½jË† Ë† la vitesse max
         if(mMoveDirection == MOVE_LEFT && vel.x > -mMoveSpeed) {
             mPhysicsBody.applyLinearImpulse(-2f, 0, pos.x, pos.y);
         } 
  
-        // Si on va a droite et qu'on est pas dŽjˆ ˆ la vitesse max
+        // Si on va a droite et qu'on est pas dÅ½jË† Ë† la vitesse max
         if(mMoveDirection == MOVE_RIGHT && vel.x < mMoveSpeed) {
             mPhysicsBody.applyLinearImpulse(2f, 0, pos.x, pos.y);
         }
@@ -206,47 +206,47 @@ public class Character {
 	}
 	
 	/**
-	 * CrŽŽe les propriŽtŽs physiques du personnage
+	 * CrÅ½Å½e les propriÅ½tÅ½s physiques du personnage
 	 */
 	protected void buildPhysicsBody() {
-	    // DŽfinition de l'ensemble du corps
+	    // DÅ½finition de l'ensemble du corps
 	    BodyDef def = new BodyDef();
 	    
 	    // C'est un corps dynamique (qui bouge :3)
         def.type = BodyType.DynamicBody;
         
-        // On crŽŽ le conteneur
+        // On crÅ½Å½ le conteneur
         mPhysicsBody = PhysicsController.getInstance().getWorld().createBody(def);
  
-        // On dŽfinit ensuite deux composantes du corps : une boite pour le torse,
-        // et un cercle pour les pieds (afin d'Žviter de rester coincŽ face ˆ des petits
+        // On dÅ½finit ensuite deux composantes du corps : une boite pour le torse,
+        // et un cercle pour les pieds (afin d'Å½viter de rester coincÅ½ face Ë† des petits
         // obstacles).
         PolygonShape poly = new PolygonShape();
         
-        // TODO: Taille de la boite variable en fonction de la taille rŽelle
+        // TODO: Taille de la boite variable en fonction de la taille rÅ½elle
         // du personnage
-        poly.setAsBox(0.45f, 1.4f);
+        poly.setAsBox(0.45f, 0.45f);
         mPhysicsChestFixture = mPhysicsBody.createFixture(poly, 1);
         
-        // On libre les ressources
+        // On libï¿½re les ressources
         poly.dispose();         
  
-        // Mme chose pour les pieds :3
+        // Mï¿½me chose pour les pieds :3
         CircleShape circle = new CircleShape();     
         circle.setRadius(0.45f);
         
         // On place les pieds en dessous du torse
-        circle.setPosition(new Vector2(0, -1.4f));
+        circle.setPosition(new Vector2(0, -0.45f));
         
         mPhysicsSensorFixture = mPhysicsBody.createFixture(circle, 0);     
         circle.dispose();       
  
-        // On active la dŽtection continue des collisions
-        // Cela permet d'tre sžr que le joueur ne va pas traverser des murs
-        // ou autres si il se dŽplace trs vite.
+        // On active la dÅ½tection continue des collisions
+        // Cela permet d'ï¿½tre sÅ¾r que le joueur ne va pas traverser des murs
+        // ou autres si il se dÅ½place trï¿½s vite.
         mPhysicsBody.setBullet(true);
         
-        // On empche le personnage de faire des rotations impromptues
+        // On empï¿½che le personnage de faire des rotations impromptues
         mPhysicsBody.setFixedRotation(true);
 	}
 	
@@ -257,21 +257,21 @@ public class Character {
 	 * @return boolean
 	 */
 	public boolean isTouchingGround() {
-	    // On rŽcupre la liste des collisions en cours
+	    // On rÅ½cupï¿½re la liste des collisions en cours
         List<Contact> contactList = PhysicsController.getInstance().getWorld().getContactList();
         
         // Pour chaque point de contact
         for(int i = 0; i < contactList.size(); i++) {
             Contact contact = contactList.get(i);
             
-            // Si un des cotŽs touche les pieds du personnage
+            // Si un des cotÅ½s touche les pieds du personnage
             if(contact.isTouching() && (contact.getFixtureA() == mPhysicsSensorFixture ||
                contact.getFixtureB() == mPhysicsSensorFixture)) {             
  
-                // On rŽcupre la position du personnage
+                // On rÅ½cupï¿½re la position du personnage
                 Vector2 pos = mPhysicsBody.getPosition();
                 
-                // On vŽrifie que les points de contacts sont bien juste en dessous des pieds
+                // On vÅ½rifie que les points de contacts sont bien juste en dessous des pieds
                 WorldManifold manifold = contact.getWorldManifold();
                 boolean below = true;
                 
@@ -280,7 +280,7 @@ public class Character {
                 }
  
                 if (below) {
-                    // Tous les points de contact sont bien en-dessous, on est calŽs
+                    // Tous les points de contact sont bien en-dessous, on est calÅ½s
                     return true;
                 }
  
