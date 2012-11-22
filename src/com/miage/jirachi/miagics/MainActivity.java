@@ -96,6 +96,8 @@ public class MainActivity  extends AndroidApplication {
           
             
             backGTexture.render(mBatch,mCamera);
+            mCamera.position.set(test.getPosition().x, test.getPosition().y+5, 0);
+            mCamera.update();
             //render all du chara controller
             CharacterController.getInstance().renderAll(mBatch, mCamera);
             
@@ -105,8 +107,7 @@ public class MainActivity  extends AndroidApplication {
             mBatch.end();
          // Affiche les éléments physiques (pour débug)
             PhysicsController.getInstance().drawDebug(mCamera.combined);
-            mCamera.position.set(test.getPosition().x, test.getPosition().y+5, 0);
-            mCamera.update();
+           
             
             
         }
