@@ -30,7 +30,7 @@ public class NetworkController {
 	public void connect(String ip, int port) throws IOException {
 		mSocket = new Client();
 		mSocket.start();
-		mSocket.connect(5000, ip, 37153, 35173);
+		mSocket.connect(1000, ip, 37153, 35173);
 		
 		Kryo kryo = mSocket.getKryo();
 		kryo.register(Packet.class);

@@ -91,7 +91,7 @@ public class MainActivity  extends AndroidApplication {
           
             
             backGTexture.render(mBatch,mCamera);
-            mCamera.position.set(test.getPosition().x, test.getPosition().y+5, 0);
+            mCamera.position.set(CharacterController.getInstance().getSelf().getPosition().x, CharacterController.getInstance().getSelf().getPosition().y+5, 0);
             mCamera.update();
             //render all du chara controller
             CharacterController.getInstance().renderAll(mBatch, mCamera);
