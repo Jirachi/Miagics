@@ -18,8 +18,8 @@ public class SceneBackground {
 	
 	public SceneBackground(String path) {
 		mBackgroundTexture = new Texture(Gdx.files.internal(path));
-		mPosBGRight = new Vector2(-400,-200.5f);
-		mPosBGLeft = new Vector2(-800,-200.5f);
+		mPosBGRight = new Vector2(0,-200.5f);
+		mPosBGLeft = new Vector2(-mBackgroundTexture.getWidth()*MainActivity.PPX,-200.5f);
 		mProfondeur = 0;
 	}
 	
@@ -32,12 +32,18 @@ public void render(SpriteBatch batch, Camera cam){
 			cam.project(mProjectionR.set(mPosBGRight.x, mPosBGRight.y,0));
 			cam.project(mProjectionL.set(mPosBGLeft.x, mPosBGLeft.y,0));
 			//mProjectionL.x=mProjectionR.x-mBackgroundTexture.getWidth();
-		/*	
+		
 		if(mProjectionL.x>0){
-			mProjectionR.x=mProjectionL.x-mBackgroundTexture.getWidth();
+			mPosBGRight.x=mPosBGLeft.x;
+			mPosBGLeft.x=mPosBGRight.x-mBackgroundTexture.getWidth()*MainActivity.PPX;
 			//cam.project(mProjectionR.set(mPosBGRight.x, mPosBGRight.y,0));
 		}
-		*/
+		if(mProjectionR.x<0){
+			mPosBGRight.x=mPosBGLeft.x;
+			mPosBGLeft.x=mPosBGRight.x+(mBackgroundTexture.getWidth()*MainActivity.PPX);
+			//cam.project(mProjectionR.set(mPosBGRight.x, mPosBGRight.y,0));
+		}
+		
 		
 		//batch.draw(objectSprite, mProjection.x, mProjection.y,0.0f,0.0f,256,256,1.0f,1.0f, objectModel.getAngle() * 3.1415f);
 		//objectSprite.draw(batch)	;

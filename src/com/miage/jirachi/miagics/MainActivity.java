@@ -48,7 +48,7 @@ public class MainActivity  extends AndroidApplication {
         	PPX = (float)Gdx.graphics.getWidth() / 800.f;
     		PPY = (float)Gdx.graphics.getHeight() / 480.f;
             CharacterController.getInstance().setSelf(new Player());
-            test2 =  new StaticSceneObject("","data/test.png");
+            //test2 =  new StaticSceneObject("","data/test.png");
             //test3 = new AnimatedSceneObject("","animated/droid_from_android.png");
             backGTexture = new SceneBackground("data/background/decor1.png");
             
@@ -58,11 +58,12 @@ public class MainActivity  extends AndroidApplication {
             
             // === TEST PHYSIQUE
             // On crŽŽ un sol
-            PhysicsController.getInstance().createEdge(BodyType.StaticBody, -2000, -10, 1000, -10, 0);
+            PhysicsController.getInstance().createEdge(BodyType.StaticBody, -4000, -10, 3000, -10, 0);
            
             // === RESEAU
             try {
                 NetworkController.getInstance().connect("192.168.0.10", 37153);
+                //NetworkController.getInstance().connect("friboks.ouverta.fr", 37153);
                 NetworkController.getInstance().send(PacketMaker.makeBootMe());
             } catch (IOException e) {
                 Log.e("Reseau", e.getMessage());
@@ -80,6 +81,8 @@ public class MainActivity  extends AndroidApplication {
 
         @Override
         public void render() {
+        	mCamera.position.set(CharacterController.getInstance().getSelf().getPosition().x, CharacterController.getInstance().getSelf().getPosition().y+5, 0);
+            mCamera.update();
             Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
         	NetworkController.getInstance().update();
             PhysicsController.getInstance().update();
@@ -91,12 +94,11 @@ public class MainActivity  extends AndroidApplication {
           
             
             backGTexture.render(mBatch,mCamera);
-            mCamera.position.set(CharacterController.getInstance().getSelf().getPosition().x, CharacterController.getInstance().getSelf().getPosition().y+5, 0);
-            mCamera.update();
+            
             //render all du chara controller
             CharacterController.getInstance().renderAll(mBatch, mCamera);
             
-           test2.render(mBatch, mCamera);
+           //test2.render(mBatch, mCamera);
             //test3.render(mBatch, mCamera);
             
             mBatch.end();
