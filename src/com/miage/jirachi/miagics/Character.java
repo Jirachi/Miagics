@@ -148,8 +148,7 @@ public class Character {
         }
 
 		// Mise à jour des propriétés physiques
-        Vector2 vel = mPhysicsBody.getLinearVelocity();
-        Vector2 pos = mPhysicsBody.getPosition();     
+        Vector2 vel = mPhysicsBody.getLinearVelocity(); 
         boolean grounded = isTouchingGround();
         
         // On estime être sur le sol si on le touche, ou si on l'a
