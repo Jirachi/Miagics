@@ -11,7 +11,6 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -30,22 +29,18 @@ public class MainActivity  extends AndroidApplication {
 	public static float PPX;
 	public static float PPY;
 	public static Stage mStage;
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        
-		
+
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-        config.useAccelerometer = true;
+        config.useAccelerometer = false;
         config.useCompass = false;
         config.useWakelock = true;
         config.useGL20 = true;
         initialize(new GameClient(), config);
-        
-        /*FileHandle handle = Gdx.files.internal("data/myfile.txt");*/
-        
     }
 
     SceneObject test2;
@@ -60,41 +55,30 @@ public class MainActivity  extends AndroidApplication {
         public void create() {
         	PPX = (float)Gdx.graphics.getWidth() / 800.f;
     		PPY = (float)Gdx.graphics.getHeight() / 480.f;
-            CharacterController.getInstance().setSelf(new Player());
-            //test2 =  new StaticSceneObject("","data/test.png");
+            
+    		CharacterController.getInstance().setSelf(new Player());
+            
+    		//test2 =  new StaticSceneObject("","data/test.png");
             //test3 = new AnimatedSceneObject("","animated/droid_from_android.png");
-            backGTexture = new SceneBackground("data/background/decor1.png");
-            Texture mTextBouton = new Texture(Gdx.files.internal("buttons/BoutonSaut.png"));
+            
+    		backGTexture = new SceneBackground("data/background/decor1.png");
+            
+    		Texture mTextBouton = new Texture(Gdx.files.internal("buttons/BoutonSaut.png"));
             Texture mTextBouton2 = new Texture(Gdx.files.internal("buttons/BoutonSaut2.png"));
             TextureRegion mTextRBouton = new TextureRegion(mTextBouton,0,0,226,226);
             TextureRegion mTextRBouton2 = new TextureRegion(mTextBouton2,0,0,226,226);
             testBouton = new Button(mTextRBouton,mTextRBouton2);
-            //testBouton.action(Parallel.$(Sequence.$(FadeOut.$(2), FadeIn.$(2)),
-            //	      Sequence.$(ScaleTo.$(0.1f, 0.1f, 1.5f), ScaleTo.$(1.0f, 1.0f, 1.5f))));
+            
             testBouton.setClickListener(new ClickListener(){
-            	
 				@Override
 				public void click(Actor arg0, float arg1, float arg2) {
-					// TODO Auto-generated method stub
-					if(testBouton.isPressed==true){
-		        		
-						System.out.println("lol");
-		        	}
-					
-if(testBouton.isChecked()==true){
-		        		
-						System.out.println("lol");
-		        	}
-					
+				    System.out.println("lol");
 				}
             	
             });
             mStage = new Stage(800, 400, false);
-            
-            //mCamera = new OrthographicCamera(800, 480);
-            //mCamera.update();
-            
             mBatch = new SpriteBatch();
+            
             // === TEST PHYSIQUE
             // On crŽŽ un sol
             PhysicsController.getInstance().createEdge(BodyType.StaticBody, -4000, -10, 3000, -10, 0);
@@ -113,9 +97,7 @@ if(testBouton.isChecked()==true){
             	      Sequence.$(ScaleTo.$(0.1f, 0.1f, 1.5f), ScaleTo.$(1.0f, 1.0f, 1.5f))));
             Gdx.input.setInputProcessor(this);
         }
-        
-        //test de background a virer si ne marche pas
-    
+      
         @Override
         public void resize(int width, int height) {
             // TODO Auto-generated method stub
