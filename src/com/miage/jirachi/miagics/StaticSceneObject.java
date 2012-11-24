@@ -46,6 +46,28 @@ public class StaticSceneObject extends SceneObject {
 	}
 	
 	/**
+     * Constructeur
+     * @param refName Nom de reference
+     * @param path Chemin vers l'image de representation
+     * @param sX Echelle X
+     * @param sY Echelle Y
+     */
+    public StaticSceneObject(String refName, String path, float sX, float sY) {
+        super(refName);
+        
+        mPath = path;
+        mObjectModel = null;
+        mObjectModelOrigin = null;
+        mObjectSprite = null;
+        mObjectTexture = null;
+        
+        createSprites();
+        super.width *= sX;
+        super.height *= sY;
+        createObject(); 
+    }
+	
+	/**
 	 * Cree l'objet physique
 	 */
 	private void createObject() {
@@ -53,21 +75,38 @@ public class StaticSceneObject extends SceneObject {
 	    BodyEditorLoader loader = new BodyEditorLoader(Gdx.files.internal("data/test.json"));
 		
 		//code aurelien
-	    // Si on a pas deja un body, on en cree un
-	    if (mObjectModel == null) {
-    		BodyDef bd = new BodyDef();
-    		bd.type=BodyType.DynamicBody;
-    		
-    		mObjectModel = PhysicsController.getInstance().getWorld().createBody(bd);
-	    } else {
+	    // Si on a deja un body, on le supprime
+	    if (mObjectModel != null) {
 	        // On a deja un body, on supprime les fixtures associees
 	        ArrayList<Fixture> fixtures = mObjectModel.getFixtureList();
 	        
 	        for (int i = 0; i < fixtures.size(); i++) {
 	            mObjectModel.destroyFixture(mObjectModel.getFixtureList().get(i));
 	        }
+	        
+	        assert(mObjectModel.getFixtureList().size() == 0);
+
+	        // FIXME: Si on supprime juste les fixtures, il reste des morceaux non supprimes.
+	        // Workaround pour le moment, on supprime et recree tout le body.
+	        BodyDef bd = new BodyDef();
+            bd.type=BodyType.DynamicBody;
+            
+            Body newModel = PhysicsController.getInstance().getWorld().createBody(bd);
+            
+            newModel.setAngularDamping(mObjectModel.getAngularDamping());
+            newModel.setAngularVelocity(mObjectModel.getAngularVelocity());
+            newModel.setLinearVelocity(mObjectModel.getLinearVelocity());
+            newModel.setTransform(mObjectModel.getTransform().getPosition(), mObjectModel.getAngle());
+            
+	        mObjectModel.getWorld().destroyBody(mObjectModel);
+	        mObjectModel = newModel;
+	    } else {
+	        BodyDef bd = new BodyDef();
+	        bd.type=BodyType.DynamicBody;
+	        
+	        mObjectModel = PhysicsController.getInstance().getWorld().createBody(bd);
 	    }
-		
+	    
 	    FixtureDef fd = new FixtureDef();
         fd.density = 50;
         fd.friction = 1f;
