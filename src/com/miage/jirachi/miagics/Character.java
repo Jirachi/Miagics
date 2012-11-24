@@ -76,8 +76,8 @@ public class Character {
 	/**
 	 * Force la position du joueur
 	 */
-	public void setPosition(int x, int y) {
-		mPhysicsBody.setTransform(new Vector2(x,y), 0);
+	public void setPosition(float f, float g) {
+		mPhysicsBody.setTransform(new Vector2(f,g), 0);
 	}
 	
 	/**

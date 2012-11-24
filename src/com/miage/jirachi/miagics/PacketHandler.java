@@ -43,8 +43,13 @@ public class PacketHandler {
     public static void handlePlayerExisting(BitStream data) {
         Player newPlayer = new Player();
         newPlayer.setNetworkId(data.readLong());
-        newPlayer.setPosition(data.readInt(), data.readInt());
+        newPlayer.setPosition(data.readFloat(), data.readFloat());
 
         CharacterController.getInstance().addCharacter(newPlayer);
+    }
+    
+    public static void handleSyncPosition(BitStream data) {
+        Character c = CharacterController.getInstance().getCharacter(data.readLong());
+        c.setPosition(data.readInt(), data.readInt());
     }
 }
