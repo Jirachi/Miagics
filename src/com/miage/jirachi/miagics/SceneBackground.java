@@ -19,7 +19,7 @@ public class SceneBackground {
 	public SceneBackground(String path) {
 		mBackgroundTexture = new Texture(Gdx.files.internal(path));
 		mPosBGRight = new Vector2(0,-200.5f);
-		mPosBGLeft = new Vector2(-mBackgroundTexture.getWidth()*MainActivity.PPX,-200.5f);
+		mPosBGLeft = new Vector2(-mBackgroundTexture.getWidth(),-200.5f);
 		mProfondeur = 0;
 	}
 	
@@ -35,12 +35,12 @@ public void render(SpriteBatch batch, Camera cam){
 		
 		if(mProjectionL.x>0){
 			mPosBGRight.x=mPosBGLeft.x;
-			mPosBGLeft.x=mPosBGRight.x-mBackgroundTexture.getWidth()*MainActivity.PPX;
+			mPosBGLeft.x=mPosBGRight.x-mBackgroundTexture.getWidth();
 			//cam.project(mProjectionR.set(mPosBGRight.x, mPosBGRight.y,0));
 		}
 		if(mProjectionR.x<0){
 			mPosBGRight.x=mPosBGLeft.x;
-			mPosBGLeft.x=mPosBGRight.x+(mBackgroundTexture.getWidth()*MainActivity.PPX);
+			mPosBGLeft.x=mPosBGRight.x+mBackgroundTexture.getWidth();
 			//cam.project(mProjectionR.set(mPosBGRight.x, mPosBGRight.y,0));
 		}
 		

@@ -12,12 +12,24 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.FadeIn;
+import com.badlogic.gdx.scenes.scene2d.actions.FadeOut;
+import com.badlogic.gdx.scenes.scene2d.actions.Parallel;
+import com.badlogic.gdx.scenes.scene2d.actions.ScaleTo;
+import com.badlogic.gdx.scenes.scene2d.actions.Sequence;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.ClickListener;
 
 public class MainActivity  extends AndroidApplication {
 	public static float PPX;
 	public static float PPY;
+	public static Stage mStage;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +53,7 @@ public class MainActivity  extends AndroidApplication {
     AnimatedSceneObject test3;
     Camera mCamera;
     SpriteBatch mBatch;    
+    Button testBouton;
 
     public class GameClient implements ApplicationListener, InputProcessor {		
         @Override
@@ -51,11 +64,36 @@ public class MainActivity  extends AndroidApplication {
             //test2 =  new StaticSceneObject("","data/test.png");
             //test3 = new AnimatedSceneObject("","animated/droid_from_android.png");
             backGTexture = new SceneBackground("data/background/decor1.png");
+            Texture mTextBouton = new Texture(Gdx.files.internal("buttons/BoutonSaut.png"));
+            Texture mTextBouton2 = new Texture(Gdx.files.internal("buttons/BoutonSaut2.png"));
+            TextureRegion mTextRBouton = new TextureRegion(mTextBouton,0,0,226,226);
+            TextureRegion mTextRBouton2 = new TextureRegion(mTextBouton2,0,0,226,226);
+            testBouton = new Button(mTextRBouton,mTextRBouton2);
+            //testBouton.action(Parallel.$(Sequence.$(FadeOut.$(2), FadeIn.$(2)),
+            //	      Sequence.$(ScaleTo.$(0.1f, 0.1f, 1.5f), ScaleTo.$(1.0f, 1.0f, 1.5f))));
+            testBouton.setClickListener(new ClickListener(){
+            	
+				@Override
+				public void click(Actor arg0, float arg1, float arg2) {
+					// TODO Auto-generated method stub
+					if(testBouton.isPressed==true){
+		        		
+						System.out.println("lol");
+		        	}
+					
+if(testBouton.isChecked()==true){
+		        		
+						System.out.println("lol");
+		        	}
+					
+				}
+            	
+            });
+            mStage = new Stage(800, 400, false);
+            //mCamera = new OrthographicCamera(800, 480);
+            //mCamera.update();
             
-            mCamera = new OrthographicCamera(800, 480);
-            mCamera.update();
             mBatch = new SpriteBatch();
-            
             // === TEST PHYSIQUE
             // On créé un sol
             PhysicsController.getInstance().createEdge(BodyType.StaticBody, -4000, -10, 3000, -10, 0);
@@ -68,7 +106,10 @@ public class MainActivity  extends AndroidApplication {
             } catch (IOException e) {
                 Log.e("Reseau", e.getMessage());
             }
-            
+            mCamera = mStage.getCamera();
+            mStage.addActor(testBouton);
+            testBouton.action(Parallel.$(Sequence.$(FadeOut.$(2), FadeIn.$(2)),
+            	      Sequence.$(ScaleTo.$(0.1f, 0.1f, 1.5f), ScaleTo.$(1.0f, 1.0f, 1.5f))));
             Gdx.input.setInputProcessor(this);
         }
         
@@ -89,20 +130,21 @@ public class MainActivity  extends AndroidApplication {
             
             
             
-        
+            
             mBatch.begin();
           
-            
+           
             backGTexture.render(mBatch,mCamera);
             
             //render all du chara controller
             CharacterController.getInstance().renderAll(mBatch, mCamera);
-            
+            //testBouton.draw(mBatch, logLevel);
            //test2.render(mBatch, mCamera);
             //test3.render(mBatch, mCamera);
             
             mBatch.end();
          // Affiche les éléments physiques (pour débug)
+            mStage.draw();
             PhysicsController.getInstance().drawDebug(mCamera.combined);
         }
 
@@ -124,6 +166,10 @@ public class MainActivity  extends AndroidApplication {
         @Override
         public boolean keyDown(int arg0) {
             // TODO Auto-generated method stub
+        	if(testBouton.isPressed==true){
+        		
+        		finish();
+        	}
             return false;
         }
 
@@ -159,21 +205,34 @@ public class MainActivity  extends AndroidApplication {
 
         @Override
         public boolean touchDown(int x, int y, int pointerId, int button) {
-        	
+        	if(testBouton.isChecked()==true){
+        		
+        		finish();
+        	}
+        	if(testBouton.isPressed){
+        		
+        		finish();
+        	}else{
         	if(x<=(Gdx.graphics.getWidth()/2)){
         		CharacterController.getInstance().getSelf().setMoveDirection(Character.MOVE_LEFT);
         	}else{
         		CharacterController.getInstance().getSelf().setMoveDirection(Character.MOVE_RIGHT);
         	}
         	
-        	
-            return true;
+        	}
+            return false;
         }
 
         @Override
         public boolean touchUp(int arg0, int arg1, int arg2, int arg3) {
+        	if(testBouton.isPressed){
+        		
+        		finish();
+        	}else{
         	CharacterController.getInstance().getSelf().setMoveDirection(Character.MOVE_NOT);
+        	}
             return true;
+        	
         }
     }
 }
