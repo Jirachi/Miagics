@@ -12,7 +12,6 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -26,10 +25,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ClickListener;
 
 public class MainActivity  extends AndroidApplication {
-	public static float PPX;
-	public static float PPY;
-	public static Stage mStage;
-	
+    public static Stage mStage;
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,49 +44,43 @@ public class MainActivity  extends AndroidApplication {
     SceneBackground backGTexture;
     AnimatedSceneObject test3;
     Camera mCamera;
-    SpriteBatch mBatch;    
     Button testBouton;
 
     public class GameClient implements ApplicationListener, InputProcessor {		
         @Override
         public void create() {
-        	PPX = (float)Gdx.graphics.getWidth() / 400.f;
-    		PPY = (float)Gdx.graphics.getHeight() / 240.f;
-            
-    		
-            
-    		//test2 =  new StaticSceneObject("","data/test.png");
             //test3 = new AnimatedSceneObject("","animated/droid_from_android.png");
-            
-    		
-            
-    		Texture mTextBouton = new Texture(Gdx.files.internal("buttons/BoutonSaut.png"));
+            Texture mTextBouton = new Texture(Gdx.files.internal("buttons/BoutonSaut.png"));
             Texture mTextBouton2 = new Texture(Gdx.files.internal("buttons/BoutonSaut2.png"));
             TextureRegion mTextRBouton = new TextureRegion(mTextBouton,0,0,226,226);
             TextureRegion mTextRBouton2 = new TextureRegion(mTextBouton2,0,0,226,226);
             testBouton = new Button(mTextRBouton,mTextRBouton2);
-            
+
             testBouton.setClickListener(new ClickListener(){
-				@Override
-				public void click(Actor arg0, float arg1, float arg2) {
-				    System.out.println("lol");
-				}
-            	
+                @Override
+                public void click(Actor arg0, float arg1, float arg2) {
+                    System.out.println("lol");
+                }
+
             });
             mStage = new Stage(400, 240, true);
-            mBatch = new SpriteBatch();
             backGTexture = new SceneBackground("data/background/decor1.png");
+
             mStage.addActor(backGTexture);
             // == TEST: Personnage self
-            Texture persoTex = new Texture(Gdx.files.internal("animated/droid_from_android.png"));
+            Texture persoTex = new Texture(Gdx.files.internal("animated/fox.png"));
             TextureRegion persoRegions[][] = TextureRegion.split(persoTex, persoTex.getWidth() / 3, persoTex.getHeight() / 9);
-            
+
             CharacterController.getInstance().setSelf(new Player(persoRegions));
-            
+
             // === TEST PHYSIQUE
             // On créé un sol
             PhysicsController.getInstance().createEdge(BodyType.StaticBody, -4000, -10, 3000, -10, 0);
-           
+            test2 =  new StaticSceneObject("","data/test.png");
+            test2.setPosition(900, 10);
+            test2.setScale(0.5f, 0.5f);
+            mStage.addActor(test2);
+
             // === RESEAU
             try {
                 NetworkController.getInstance().connect("192.168.0.10", 37153);
@@ -101,10 +92,11 @@ public class MainActivity  extends AndroidApplication {
             mCamera = mStage.getCamera();
             mStage.addActor(testBouton);
             testBouton.action(Parallel.$(Sequence.$(FadeOut.$(2), FadeIn.$(2)),
-            	      Sequence.$(ScaleTo.$(0.1f, 0.1f, 1.5f), ScaleTo.$(1.0f, 1.0f, 1.5f))));
+                    Sequence.$(ScaleTo.$(0.1f, 0.1f, 1.5f), ScaleTo.$(1.0f, 1.0f, 1.5f))));
+
             Gdx.input.setInputProcessor(this);
         }
-      
+
         @Override
         public void resize(int width, int height) {
             // TODO Auto-generated method stub
@@ -112,30 +104,26 @@ public class MainActivity  extends AndroidApplication {
 
         @Override
         public void render() {
-        	mCamera.position.set(CharacterController.getInstance().getSelf().getPosition().x, CharacterController.getInstance().getSelf().getPosition().y+5, 0);
-            mCamera.update();
             Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-        	NetworkController.getInstance().update();
-            PhysicsController.getInstance().update();
-            
-            mBatch.begin();
-           
-            
+            NetworkController.getInstance().update();
+
             //render all du chara controller
             CharacterController.getInstance().update();
-            //testBouton.draw(mBatch, logLevel);
-           //test2.render(mBatch, mCamera);
+            test2.update();
             //test3.render(mBatch, mCamera);
             
-            mBatch.end();
-         // Affiche les éléments physiques (pour débug)
+            PhysicsController.getInstance().update();
+
+            // Affiche les éléments physiques (pour débug)
+            mCamera.position.set(CharacterController.getInstance().getSelf().getPosition().x, CharacterController.getInstance().getSelf().getPosition().y+5, 0);
+            mCamera.update();
             mStage.draw();
             PhysicsController.getInstance().drawDebug(mCamera.combined);
         }
 
         @Override
         public void pause() {
-        	// TODO Auto-generated method stub
+            // TODO Auto-generated method stub
         }
 
         @Override
@@ -187,13 +175,13 @@ public class MainActivity  extends AndroidApplication {
         @Override
         public boolean touchDown(int x, int y, int pointerId, int button) {
             if (!mStage.touchDown(x,y,pointerId,button)) {
-            	if(x<=(Gdx.graphics.getWidth()/2)){
-            		CharacterController.getInstance().getSelf().setMoveDirection(Character.MOVE_LEFT);
-            	} else {
-            		CharacterController.getInstance().getSelf().setMoveDirection(Character.MOVE_RIGHT);
-            	}
+                if(x<=(Gdx.graphics.getWidth()/2)){
+                    CharacterController.getInstance().getSelf().setMoveDirection(Character.MOVE_LEFT);
+                } else {
+                    CharacterController.getInstance().getSelf().setMoveDirection(Character.MOVE_RIGHT);
+                }
             }	
-        	
+
             return true;
         }
 

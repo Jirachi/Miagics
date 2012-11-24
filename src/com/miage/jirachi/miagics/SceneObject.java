@@ -1,30 +1,38 @@
 package com.miage.jirachi.miagics;
 
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
-public abstract class SceneObject {
+public abstract class SceneObject extends Image {
 	protected String mReferenceName;
-	protected Vector2 mPosition;
-	protected float mAngle;
-	protected Vector3 mProjection;
 	
-	public SceneObject(String refName){
-		mPosition = new Vector2();
-		mProjection = new Vector3();
+	/**
+	 * Constructeur
+	 * @param refName Nom de reference de l'objet
+	 */
+	protected SceneObject(String refName){
 		mReferenceName = refName;
-		
 	}
 	
-	public void setPosition(Vector2 pos){
-		mPosition = pos;
-	}
+	/**
+     * Definit la position de l'objet
+     * @param x Position X
+     * @param y Position Y
+     */
+    public abstract void setPosition(float x, float y);
 	
-	public void setAngle(float angle){
-		mAngle = angle;
-	}
+	/**
+	 * @return Position de l'objet
+	 */
+	public abstract Vector2 getPosition();
 	
-	public abstract void render(SpriteBatch batch, Camera cam);
+	/**
+	 * Definit l'echelle de l'objet
+	 */
+	public abstract void setScale(float sX, float sY);
+	
+	/**
+	 * Met a jour l'objet
+	 */
+	public abstract void update();
 }
