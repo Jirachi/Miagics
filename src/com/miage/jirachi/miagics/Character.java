@@ -3,12 +3,10 @@ package com.miage.jirachi.miagics;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -17,13 +15,12 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.WorldManifold;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
-public class Character {
+public class Character extends Image {
 	protected Texture mTexture;
 	protected int mMoveDirection = MOVE_NOT;
-	protected Vector2 mPosition;
-	protected Vector3 mProjection;
-
+	
 	protected float mTempsAccumule;
 	protected float mMoveSpeed = 400.0f;
 	
@@ -38,37 +35,39 @@ public class Character {
 	protected float mStillTime;
 
 	// attributs d'animation
-	protected TextureRegion mRegion;
-	protected TextureRegion[][] mTmp;
+	protected TextureRegion[][] mTextureRegions;
 	protected int mOppose;
 
-	// indices courants
-	protected int mCurrentColumn;
-	protected int mCurrentLine;
-
+	// constantes de mouvement
 	public final static int MOVE_LEFT = 1;
 	public final static int MOVE_RIGHT = 2;
 	/*public final static int MOVE_TOP = 3;
 	public final static int MOVE_BOTTOM = 4;*/
 	public final static int MOVE_NOT = 0;
-
-	private static final int        FRAME_COLS = 3;         // #1
-	private static final int        FRAME_ROWS = 9; 
+	
+	// TODO: Framework animation (voir redmine)
+	private Animation mIdleAnimation;
+	private Animation mWalkAnimation;
 
 	/**
 	 * Default constructor
 	 */
-	public Character() {
-		mTempsAccumule=0;
+	public Character(TextureRegion[][] tex) {
+	    // On recupere les regions de texture pour l'animation, et on les passe
+	    // a la superclasse
+        super(tex[0][0]);
+	   
+        // Initialisation des variables
+        mTextureRegions = tex;
+		mTempsAccumule = 0;
 		mOppose = MOVE_RIGHT;
-		mTexture = new Texture(Gdx.files.internal("animated/droid_from_android.png"));
-		mRegion = new TextureRegion(mTexture, 0, 0, 50, 86);
-		mPosition = new Vector2(-5,-5);
-		mProjection = new Vector3();
 		
+		// Init des animations (TODO: Framework animation, voir redmine)
+		mIdleAnimation = new Animation(0.15f, tex[0]);
+		mWalkAnimation = new Animation(0.15f, tex[1]);
+		
+		// Construction du body physique
 		buildPhysicsBody();
-
-		mTmp = TextureRegion.split(mTexture, mTexture.getWidth() / FRAME_COLS, mTexture.getHeight() / FRAME_ROWS);
 	}
 
 	/**
@@ -97,20 +96,7 @@ public class Character {
 	 * @return Position
 	 */
 	public Vector2 getPosition() {
-		return mPosition;
-	}
-
-	/**
-	 * Dessine le personnage
-	 * @param batch
-	 * @param cam
-	 */
-	public void render(SpriteBatch batch, Camera cam) {
-		update(Gdx.graphics.getDeltaTime());
-		mPosition = mPhysicsBody.getPosition();
-		cam.project(mProjection.set(mPosition.x-0.5f, mPosition.y, 0));		
-		
-		batch.draw(this.mTmp[mCurrentLine][mCurrentColumn], mProjection.x, mProjection.y, 56f * MainActivity.PPX, 80f * MainActivity.PPY);
+		return mPhysicsBody.getPosition();
 	}
 
 	/**
@@ -119,32 +105,14 @@ public class Character {
 	 * @param timeDelta
 	 */
 	public void update(float timeDelta) {
-		mTempsAccumule += timeDelta;
-		
-		switch (mMoveDirection) {
-		case MOVE_LEFT: 
-			mCurrentLine = 1;
-			break;
-
-		case MOVE_RIGHT:
-			mCurrentLine = 1;
-			break;
-
-		case MOVE_NOT: 
-			mCurrentLine = 0;
-			break;
-		}
-
-		// Mise à jour de l'animation
-		if (mTempsAccumule > 0.1f) {
-            mCurrentColumn++;
-            mTempsAccumule = 0;
-            
-            if (mCurrentColumn == FRAME_COLS) {
-                mCurrentColumn = 0;
-            }
-        }
-
+	    // Mise a jour de l'animation
+	    if (mMoveDirection == MOVE_NOT) {
+	        this.setRegion(mIdleAnimation.getKeyFrame(mTempsAccumule += timeDelta, true));
+	    }
+	    else {
+	        this.setRegion(mWalkAnimation.getKeyFrame(mTempsAccumule += timeDelta, true));
+	    }
+	    
 		// Mise à jour des propriétés physiques
         Vector2 vel = mPhysicsBody.getLinearVelocity(); 
         boolean grounded = isTouchingGround();
@@ -202,15 +170,18 @@ public class Character {
         if(mMoveDirection == MOVE_RIGHT && vel.x < mMoveSpeed) {
             mPhysicsBody.applyLinearImpulse(mMoveSpeed / 4.0f, 0, mPhysicsBody.getWorldCenter().x, mPhysicsBody.getWorldCenter().y);
         }
+        
+        super.x = getPosition().x;
+        super.y = getPosition().y;
 	}
 
 	/**
 	 * Mirroir horizontal des textures
 	 */
 	protected void flipTextures() {
-		for (int i = 0; i < mTmp.length; i++) {
-			for (int j = 0; j < mTmp[i].length; j++) {
-				this.mTmp[i][j].flip(true, false);
+		for (int i = 0; i < mTextureRegions.length; i++) {
+			for (int j = 0; j < mTextureRegions[i].length; j++) {
+				this.mTextureRegions[i][j].flip(true, false);
 			}
 		}
 	}
@@ -300,10 +271,17 @@ public class Character {
         return false;
     }
 	
+	/**
+	 * Definit l'identifiant reseau du personnage
+	 * @param id
+	 */
 	public void setNetworkId(long id) {
 		mNetworkId = id;
 	}
 	
+	/**
+	 * @return L'identifiant reseau du personnage
+	 */
 	public long getNetworkId() {
 		return mNetworkId;
 	}

@@ -1,5 +1,7 @@
 package com.miage.jirachi.miagics;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 public class Player extends Character {
     // == Attributs
     // Temps entre chaque synchronisation de position avec le serveur
@@ -7,6 +9,11 @@ public class Player extends Character {
     
     protected float mTimeSincePosSync = 0;
 
+    // == Constructeur
+    public Player(TextureRegion[][] tex) {
+        super(tex);
+    }
+    
     // == Methodes
 	@Override
 	public void setMoveDirection(int direction) {

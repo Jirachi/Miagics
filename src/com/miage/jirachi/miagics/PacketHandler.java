@@ -1,5 +1,9 @@
 package com.miage.jirachi.miagics;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 
 public class PacketHandler {
     public static void handleBootMe(BitStream data) {
@@ -35,13 +39,19 @@ public class PacketHandler {
     }
     
     public static void handlePlayerConnect(BitStream data) {
-        Player newPlayer = new Player();
+        Texture persoTex = new Texture(Gdx.files.internal("animated/droid_from_android.png"));
+        TextureRegion persoRegions[][] = TextureRegion.split(persoTex, persoTex.getWidth() / 3, persoTex.getHeight() / 9);
+        
+        Player newPlayer = new Player(persoRegions);
         newPlayer.setNetworkId(data.readLong());
         CharacterController.getInstance().addCharacter(newPlayer);
     }
     
     public static void handlePlayerExisting(BitStream data) {
-        Player newPlayer = new Player();
+        Texture persoTex = new Texture(Gdx.files.internal("animated/droid_from_android.png"));
+        TextureRegion persoRegions[][] = TextureRegion.split(persoTex, persoTex.getWidth() / 3, persoTex.getHeight() / 9);
+        
+        Player newPlayer = new Player(persoRegions);
         newPlayer.setNetworkId(data.readLong());
         newPlayer.setPosition(data.readFloat(), data.readFloat());
 
