@@ -90,6 +90,7 @@ if(testBouton.isChecked()==true){
             	
             });
             mStage = new Stage(800, 400, false);
+            
             //mCamera = new OrthographicCamera(800, 480);
             //mCamera.update();
             
@@ -128,12 +129,8 @@ if(testBouton.isChecked()==true){
         	NetworkController.getInstance().update();
             PhysicsController.getInstance().update();
             
-            
-            
-            
             mBatch.begin();
-          
-           
+            
             backGTexture.render(mBatch,mCamera);
             
             //render all du chara controller
@@ -160,79 +157,64 @@ if(testBouton.isChecked()==true){
 
         @Override
         public void dispose() {
-            // TODO Auto-generated method stub
+            mStage.dispose();
         }
 
         @Override
         public boolean keyDown(int arg0) {
-            // TODO Auto-generated method stub
-        	if(testBouton.isPressed==true){
-        		
-        		finish();
-        	}
+            mStage.keyDown(arg0);
             return false;
         }
 
         @Override
         public boolean keyTyped(char arg0) {
-            // TODO Auto-generated method stub
+            mStage.keyTyped(arg0);
             return false;
         }
 
         @Override
         public boolean keyUp(int arg0) {
-            // TODO Auto-generated method stub
+            mStage.keyUp(arg0);
             return false;
         }
 
         @Override
         public boolean scrolled(int arg0) {
-            // TODO Auto-generated method stub
+            mStage.scrolled(arg0);
             return false;
         }
 
         @Override
         public boolean touchDragged(int arg0, int arg1, int arg2) {
-            // TODO Auto-generated method stub
+            mStage.touchDragged(arg0, arg1, arg2);
             return false;
         }
 
         @Override
         public boolean touchMoved(int arg0, int arg1) {
-            // TODO Auto-generated method stub
+            mStage.touchMoved(arg0, arg1);
             return false;
         }
 
         @Override
         public boolean touchDown(int x, int y, int pointerId, int button) {
-        	if(testBouton.isChecked()==true){
-        		
-        		finish();
-        	}
-        	if(testBouton.isPressed){
-        		
-        		finish();
-        	}else{
-        	if(x<=(Gdx.graphics.getWidth()/2)){
-        		CharacterController.getInstance().getSelf().setMoveDirection(Character.MOVE_LEFT);
-        	}else{
-        		CharacterController.getInstance().getSelf().setMoveDirection(Character.MOVE_RIGHT);
-        	}
+            if (!mStage.touchDown(x,y,pointerId,button)) {
+            	if(x<=(Gdx.graphics.getWidth()/2)){
+            		CharacterController.getInstance().getSelf().setMoveDirection(Character.MOVE_LEFT);
+            	} else {
+            		CharacterController.getInstance().getSelf().setMoveDirection(Character.MOVE_RIGHT);
+            	}
+            }	
         	
-        	}
-            return false;
+            return true;
         }
 
         @Override
         public boolean touchUp(int arg0, int arg1, int arg2, int arg3) {
-        	if(testBouton.isPressed){
-        		
-        		finish();
-        	}else{
-        	CharacterController.getInstance().getSelf().setMoveDirection(Character.MOVE_NOT);
-        	}
+            if (!mStage.touchUp(arg0, arg1, arg2, arg3)) {
+                CharacterController.getInstance().getSelf().setMoveDirection(Character.MOVE_NOT);
+            }
             return true;
-        	
         }
     }
 }
