@@ -32,4 +32,8 @@ public class Opcodes {
     // Paquet/réponse de saut
     public final static short CMSG_MOVE_JUMP    = 11;
     public final static short SMSG_MOVE_JUMP    = 12;
+    
+    // Synchro de position
+    public final static short CMSG_SYNC_POSITION = 13;
+    public final static short SMSG_SYNC_POSITION = 14;
 }
