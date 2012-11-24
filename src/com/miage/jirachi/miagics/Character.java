@@ -2,8 +2,6 @@ package com.miage.jirachi.miagics;
 
 import java.util.List;
 
-import android.util.Log;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
@@ -303,7 +301,6 @@ public class Character {
     }
 	
 	public void setNetworkId(long id) {
-		Log.e("NetworkID", "Network ID set: " + id);
 		mNetworkId = id;
 	}
 	
