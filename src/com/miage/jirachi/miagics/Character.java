@@ -97,17 +97,16 @@ public class Character extends Image {
 	}
 
 	/**
-	 * Retourne la position dans la scàne de l'objet
+	 * Retourne la position dans la scene de l'objet
 	 * @return Position
 	 */
 	public Vector2 getPosition() {
-		return mPhysicsBody.getPosition();
+		return mPhysicsBody.getWorldCenter().sub(super.width/5.0f, super.height/5.0f);
 	}
 
 	/**
-	 * Met à jour le personnage
-	 * @note Appelé par render()
-	 * @param timeDelta
+	 * Met a jour le personnage
+	 * @param timeDelta Temps depuis le dernier rendu
 	 */
 	public void update(float timeDelta) {
 	    // Mise a jour de l'animation
@@ -168,12 +167,12 @@ public class Character extends Image {
  
         // Si on va a gauche et qu'on est pas déjË† Ë† la vitesse max
         if(mMoveDirection == MOVE_LEFT && vel.x > -mMoveSpeed) {
-            mPhysicsBody.applyLinearImpulse(-mMoveSpeed / 4.0f, 0, mPhysicsBody.getWorldCenter().x, mPhysicsBody.getWorldCenter().y);
+            mPhysicsBody.applyLinearImpulse(-mMoveSpeed / 4.0f, 0, 0, 0);
         } 
  
         // Si on va a droite et qu'on est pas déjË† Ë† la vitesse max
         if(mMoveDirection == MOVE_RIGHT && vel.x < mMoveSpeed) {
-            mPhysicsBody.applyLinearImpulse(mMoveSpeed / 4.0f, 0, mPhysicsBody.getWorldCenter().x, mPhysicsBody.getWorldCenter().y);
+            mPhysicsBody.applyLinearImpulse(mMoveSpeed / 4.0f, 0, 0, 0);
         }
         
         super.x = getPosition().x;
@@ -211,29 +210,34 @@ public class Character extends Image {
         
         // TODO: Taille de la boite variable en fonction de la taille réelle
         // du personnage
-        poly.setAsBox(0.45f, 0.45f);
+        poly.setAsBox(10.45f, 10.45f);
         mPhysicsChestFixture = mPhysicsBody.createFixture(poly, 1);
         
-        // On libàre les ressources
+        // On libere les ressources
         poly.dispose();         
  
         // Màme chose pour les pieds :3
         CircleShape circle = new CircleShape();     
-        circle.setRadius(0.45f);
+        circle.setRadius(10.45f);
         
         // On place les pieds en dessous du torse
-        circle.setPosition(new Vector2(0, -0.45f));
+        circle.setPosition(new Vector2(0, -10.45f));
         
         mPhysicsSensorFixture = mPhysicsBody.createFixture(circle, 0);     
-        circle.dispose();       
+        circle.dispose();
+        
+        mPhysicsSensorFixture.setDensity(0.001f);
+        mPhysicsChestFixture.setDensity(0.001f);
+        mPhysicsBody.resetMassData();
  
-        // On active la détection continue des collisions
-        // Cela permet d'être sûr que le joueur ne va pas traverser des murs
-        // ou autres si il se déplace tràs vite.
+        // On active la detection continue des collisions
+        // Cela permet d'etre sur que le joueur ne va pas traverser des murs
+        // ou autres si il se deplace tres vite.
         mPhysicsBody.setBullet(true);
         
-        // On empàche le personnage de faire des rotations impromptues
+        // On empeche le personnage de faire des rotations impromptues
         mPhysicsBody.setFixedRotation(true);
+        
 	}
 	
 	/**
