@@ -55,7 +55,8 @@ public class MainActivity  extends AndroidApplication {
             TextureRegion mTextRBouton = new TextureRegion(mTextBouton,0,0,226,226);
             TextureRegion mTextRBouton2 = new TextureRegion(mTextBouton2,0,0,226,226);
             testBouton = new Button(mTextRBouton,mTextRBouton2);
-
+            testBouton.width = 60;
+            testBouton.height = 60;
             testBouton.setClickListener(new ClickListener(){
                 @Override
                 public void click(Actor arg0, float arg1, float arg2) {
@@ -106,11 +107,13 @@ public class MainActivity  extends AndroidApplication {
         public void render() {
             Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
             NetworkController.getInstance().update();
+            mStage.act(Gdx.graphics.getDeltaTime());
             PhysicsController.getInstance().update();
             
             //render all du chara controller
             CharacterController.getInstance().update();
             test2.update();
+            
             //test3.render(mBatch, mCamera);
             
             
@@ -118,6 +121,8 @@ public class MainActivity  extends AndroidApplication {
             // Affiche les éléments physiques (pour débug)
             mCamera.position.set(CharacterController.getInstance().getSelf().getPosition().x, CharacterController.getInstance().getSelf().getPosition().y+5, 0);
             mCamera.update();
+            testBouton.x = mCamera.position.x - mCamera.viewportWidth / 2.0f;
+            testBouton.y = mCamera.position.y - mCamera.viewportHeight / 2.0f;
             mStage.draw();
             PhysicsController.getInstance().drawDebug(mCamera.combined);
         }
