@@ -53,15 +53,15 @@ public class MainActivity  extends AndroidApplication {
     public class GameClient implements ApplicationListener, InputProcessor {		
         @Override
         public void create() {
-        	PPX = (float)Gdx.graphics.getWidth() / 800.f;
-    		PPY = (float)Gdx.graphics.getHeight() / 480.f;
+        	PPX = (float)Gdx.graphics.getWidth() / 400.f;
+    		PPY = (float)Gdx.graphics.getHeight() / 240.f;
             
     		
             
     		//test2 =  new StaticSceneObject("","data/test.png");
             //test3 = new AnimatedSceneObject("","animated/droid_from_android.png");
             
-    		backGTexture = new SceneBackground("data/background/decor1.png");
+    		
             
     		Texture mTextBouton = new Texture(Gdx.files.internal("buttons/BoutonSaut.png"));
             Texture mTextBouton2 = new Texture(Gdx.files.internal("buttons/BoutonSaut2.png"));
@@ -76,9 +76,10 @@ public class MainActivity  extends AndroidApplication {
 				}
             	
             });
-            mStage = new Stage(800, 400, false);
+            mStage = new Stage(400, 240, true);
             mBatch = new SpriteBatch();
-            
+            backGTexture = new SceneBackground("data/background/decor1.png");
+            mStage.addActor(backGTexture);
             // == TEST: Personnage self
             Texture persoTex = new Texture(Gdx.files.internal("animated/droid_from_android.png"));
             TextureRegion persoRegions[][] = TextureRegion.split(persoTex, persoTex.getWidth() / 3, persoTex.getHeight() / 9);
@@ -118,8 +119,7 @@ public class MainActivity  extends AndroidApplication {
             PhysicsController.getInstance().update();
             
             mBatch.begin();
-            
-            backGTexture.render(mBatch,mCamera);
+           
             
             //render all du chara controller
             CharacterController.getInstance().update();

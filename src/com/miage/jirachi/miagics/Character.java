@@ -22,7 +22,7 @@ public class Character extends Image {
 	protected int mMoveDirection = MOVE_NOT;
 	
 	protected float mTempsAccumule;
-	protected float mMoveSpeed = 400.0f;
+	protected float mMoveSpeed = 200.0f;
 	
 	// propriétés réseau
 	protected long mNetworkId;
@@ -68,6 +68,9 @@ public class Character extends Image {
 		
 		// Construction du body physique
 		buildPhysicsBody();
+		
+		// On definit l'echelle du perso (1/2 de la taille reelle)
+		this.scaleX = this.scaleY = 0.5f;
 	}
 
 	/**
