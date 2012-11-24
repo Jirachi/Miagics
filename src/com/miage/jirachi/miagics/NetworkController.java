@@ -15,6 +15,10 @@ public class NetworkController {
 	private Client mSocket;
 	private ArrayList<Packet> mPackets;
 
+	/**
+	 * Renvoie l'instance unique de la classe
+	 * @return
+	 */
 	public static NetworkController getInstance() {
 		if (mSingleton == null) {
 			mSingleton = new NetworkController();
@@ -23,29 +27,47 @@ public class NetworkController {
 		return mSingleton;
 	}
 
-	public NetworkController() {
+	/**
+	 * Constructeur
+	 */
+	private NetworkController() {
 		mPackets = new ArrayList<Packet>();
 	}
 
+	/**
+	 * Connecte le controleur a un serveur
+	 * @param ip L'IP du serveur
+	 * @param port (inutilisé)
+	 * @throws IOException Si la connexion échoue
+	 */
 	public void connect(String ip, int port) throws IOException {
+	    // On créé et connecte le client
 		mSocket = new Client();
 		mSocket.start();
 		mSocket.connect(1000, ip, 37153, 35173);
 		
+		// On enregistre les classes serializables pour les transférer
 		Kryo kryo = mSocket.getKryo();
 		kryo.register(Packet.class);
 		kryo.register(byte[].class);
 
+		// On ajoute le listener qui va etre appele quand un packet arrive
 		mSocket.addListener(new Listener() {
 			public void received (Connection connection, Object object) {
 				if (object instanceof Packet) {
+				    // On met les paquets en liste car il faut etre dans le thread
+				    // de rendu pour interagir avec libgdx.
 					mPackets.add((Packet)object);
 				}
 			}
 		});
 	}
 
+	/**
+	 * Mise a jour du controleur, traite les paquets
+	 */
 	public void update() {
+	    // On traite les paquets qu'on a recu depuis la derniere frame
 		for (int i = 0; i < mPackets.size(); i++) {
 			Packet packet = mPackets.get(i);
 			
@@ -53,73 +75,51 @@ public class NetworkController {
 	
 			switch (packet.opcode) {
 			case Opcodes.SMSG_BOOTME:
-				long myNetworkId = data.readLong();
-				CharacterController.getInstance().getSelf().setNetworkId(myNetworkId);
+				PacketHandler.handleBootMe(data);
 				break;
 	
 			case Opcodes.SMSG_MOVE_LEFT:
-			{
-				long networkId = data.readLong();
-				Character c = CharacterController.getInstance().getCharacter(networkId);
-	
-				if (c == null) {
-					Log.e("Reseau", "Joueur introuvable pour maj move");
-				} else {
-					c.setMoveDirection(Character.MOVE_LEFT);
-				}
-			}
-			break;
+			    PacketHandler.handleMoveLeft(data);
+			    break;
 	
 			case Opcodes.SMSG_MOVE_RIGHT:
-			{
-				long networkId = data.readLong();
-				Character c = CharacterController.getInstance().getCharacter(networkId);
-	
-				if (c == null) {
-					Log.e("Reseau", "Joueur introuvable pour maj move");
-				} else {
-					c.setMoveDirection(Character.MOVE_RIGHT);
-				}
-			}
-			break;
+			    PacketHandler.handleMoveRight(data);
+			    break;
 	
 			case Opcodes.SMSG_MOVE_STOP:
-			{
-				long networkId = data.readLong();
-				Character c = CharacterController.getInstance().getCharacter(networkId);
-	
-				if (c == null) {
-					Log.e("Reseau", "Joueur introuvable pour maj move");
-				} else {
-					c.setMoveDirection(Character.MOVE_NOT);
-				}
-			}
-			break;
+			    PacketHandler.handleMoveStop(data);
+			    break;
 	
 			case Opcodes.SMSG_PLAYER_CONNECT:
-			{
-				Player newPlayer = new Player();
-				newPlayer.setNetworkId(data.readLong());
-				CharacterController.getInstance().addCharacter(newPlayer);
-			}
-			break;
+			    PacketHandler.handlePlayerConnect(data);
+			    break;
 	
 			case Opcodes.SMSG_PLAYER_EXISTING:
-			{
-				Player newPlayer = new Player();
-				newPlayer.setNetworkId(data.readLong());
-				newPlayer.setPosition(data.readInt(), data.readInt());
-	
-				CharacterController.getInstance().addCharacter(newPlayer);
-			}
-			break;
+			    PacketHandler.handlePlayerExisting(data);
+			    break;
+			    
+			default:
+			    Log.e("NetworkController", "Opcode non gere: " + packet.opcode);
+			    break;
 			}
 		}
 		
 		mPackets.clear();
 	}
 
+	/**
+	 * Envoie un paquet de facon sure
+	 * @param packet
+	 */
 	public void send(Packet packet) {
 		mSocket.sendTCP(packet);
+	}
+	
+	/**
+	 * Envoie un paquet rapidement mais n'est pas sur d'arriver
+	 * @param packet
+	 */
+	public void sendUnreliable(Packet packet) {
+	    mSocket.sendUDP(packet);
 	}
 }
