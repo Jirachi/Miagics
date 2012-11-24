@@ -63,8 +63,10 @@ public class Character extends Image {
 		mOppose = MOVE_RIGHT;
 		
 		// Init des animations (TODO: Framework animation, voir redmine)
-		mIdleAnimation = new Animation(0.15f, tex[0]);
-		mWalkAnimation = new Animation(0.15f, tex[1]);
+		mIdleAnimation = new Animation(0.05f, tex[0]);
+		mWalkAnimation = new Animation(0.05f, tex[1]);
+		mIdleAnimation.setPlayMode(Animation.LOOP_PINGPONG);
+		mWalkAnimation.setPlayMode(Animation.LOOP_PINGPONG);
 		
 		// Construction du body physique
 		buildPhysicsBody();
