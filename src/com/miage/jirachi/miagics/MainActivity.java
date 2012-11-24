@@ -56,7 +56,7 @@ public class MainActivity  extends AndroidApplication {
         	PPX = (float)Gdx.graphics.getWidth() / 800.f;
     		PPY = (float)Gdx.graphics.getHeight() / 480.f;
             
-    		CharacterController.getInstance().setSelf(new Player());
+    		
             
     		//test2 =  new StaticSceneObject("","data/test.png");
             //test3 = new AnimatedSceneObject("","animated/droid_from_android.png");
@@ -78,6 +78,12 @@ public class MainActivity  extends AndroidApplication {
             });
             mStage = new Stage(800, 400, false);
             mBatch = new SpriteBatch();
+            
+            // == TEST: Personnage self
+            Texture persoTex = new Texture(Gdx.files.internal("animated/droid_from_android.png"));
+            TextureRegion persoRegions[][] = TextureRegion.split(persoTex, persoTex.getWidth() / 3, persoTex.getHeight() / 9);
+            
+            CharacterController.getInstance().setSelf(new Player(persoRegions));
             
             // === TEST PHYSIQUE
             // On crŽŽ un sol
@@ -116,7 +122,7 @@ public class MainActivity  extends AndroidApplication {
             backGTexture.render(mBatch,mCamera);
             
             //render all du chara controller
-            CharacterController.getInstance().renderAll(mBatch, mCamera);
+            CharacterController.getInstance().update();
             //testBouton.draw(mBatch, logLevel);
            //test2.render(mBatch, mCamera);
             //test3.render(mBatch, mCamera);
