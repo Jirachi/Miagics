@@ -28,7 +28,7 @@ public class PhysicsController {
     // Constructor
     private PhysicsController() {
         // Create physics world
-        mPhysicsWorld = new World(new Vector2(0, -20), true);
+        mPhysicsWorld = new World(new Vector2(0, -200), true);
         mDebugRenderer = new Box2DDebugRenderer();
     }
     

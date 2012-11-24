@@ -29,5 +29,7 @@ public class Player extends Character {
 	        NetworkController.getInstance().sendUnreliable(packet);
 	        mTimeSincePosSync = 0.0f;
 	    }
+	    
+	    super.update(timeDelta);
 	}
 }
