@@ -106,13 +106,14 @@ public class MainActivity  extends AndroidApplication {
         public void render() {
             Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
             NetworkController.getInstance().update();
-
+            PhysicsController.getInstance().update();
+            
             //render all du chara controller
             CharacterController.getInstance().update();
             test2.update();
             //test3.render(mBatch, mCamera);
             
-            PhysicsController.getInstance().update();
+            
 
             // Affiche les éléments physiques (pour débug)
             mCamera.position.set(CharacterController.getInstance().getSelf().getPosition().x, CharacterController.getInstance().getSelf().getPosition().y+5, 0);
