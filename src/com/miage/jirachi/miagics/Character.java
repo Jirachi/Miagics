@@ -2,8 +2,6 @@ package com.miage.jirachi.miagics;
 
 import java.util.List;
 
-import android.util.Log;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
@@ -76,8 +74,8 @@ public class Character {
 	/**
 	 * Force la position du joueur
 	 */
-	public void setPosition(int x, int y) {
-		mPhysicsBody.setTransform(new Vector2(x,y), 0);
+	public void setPosition(float f, float g) {
+		mPhysicsBody.setTransform(new Vector2(f,g), 0);
 	}
 	
 	/**
@@ -148,8 +146,7 @@ public class Character {
         }
 
 		// Mise à jour des propriétés physiques
-        Vector2 vel = mPhysicsBody.getLinearVelocity();
-        Vector2 pos = mPhysicsBody.getPosition();     
+        Vector2 vel = mPhysicsBody.getLinearVelocity(); 
         boolean grounded = isTouchingGround();
         
         // On estime être sur le sol si on le touche, ou si on l'a
@@ -304,7 +301,6 @@ public class Character {
     }
 	
 	public void setNetworkId(long id) {
-		Log.e("NetworkID", "Network ID set: " + id);
 		mNetworkId = id;
 	}
 	

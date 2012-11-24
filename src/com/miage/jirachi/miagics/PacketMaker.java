@@ -27,4 +27,16 @@ public class PacketMaker {
         
         return packet;
     }
+    
+    public static Packet makeSyncPosition(float x, float y) {
+        Packet packet = new Packet();
+        BitStream data = new BitStream();
+        
+        data.write(x);
+        data.write(y);
+        
+        packet.data = data.getBytesP();
+        
+        return packet;
+    }
 }
