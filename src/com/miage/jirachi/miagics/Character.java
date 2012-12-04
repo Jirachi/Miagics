@@ -108,7 +108,8 @@ public class Character extends Image {
 	 * Met a jour le personnage
 	 * @param timeDelta Temps depuis le dernier rendu
 	 */
-	public void update(float timeDelta) {
+	@Override
+	public void act(float timeDelta) {
 	    // Mise a jour de l'animation
 	    if (mMoveDirection == MOVE_NOT) {
 	        this.setRegion(mIdleAnimation.getKeyFrame(mTempsAccumule += timeDelta, true));

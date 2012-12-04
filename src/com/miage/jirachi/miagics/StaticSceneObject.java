@@ -16,12 +16,16 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.miage.jirachi.resource.Resource;
+import com.miage.jirachi.resource.ResourceManager;
 
 public class StaticSceneObject extends SceneObject {
 	//correspond au model
 	protected Body mObjectModel;
 	protected Vector2 mObjectModelOrigin;
 	protected String mPath;
+	protected Resource mResource;
+	protected FixtureDef mFixtureDefinition;
 	
 	//render
 	protected Sprite mObjectSprite;
@@ -36,6 +40,7 @@ public class StaticSceneObject extends SceneObject {
 		super(refName);
 		
 		mPath = path;
+		mResource = ResourceManager.getInstance().getResource(mPath);
 		mObjectModel = null;
 		mObjectModelOrigin = null;
 		mObjectSprite = null;
@@ -66,7 +71,15 @@ public class StaticSceneObject extends SceneObject {
         super.height *= sY;
         createObject(); 
     }
+    
+    public Body getPhysicsBody() {
+    	return mObjectModel;
+    }
 	
+    public void setDensity(float density) {
+    	mFixtureDefinition.density = density;
+    }
+    
 	/**
 	 * Cree l'objet physique
 	 */
@@ -74,7 +87,6 @@ public class StaticSceneObject extends SceneObject {
 		// TODO: changer les chaines de caracteres par l'argument.
 	    BodyEditorLoader loader = new BodyEditorLoader(Gdx.files.internal("data/test.json"));
 		
-		//code aurelien
 	    // Si on a deja un body, on le supprime
 	    if (mObjectModel != null) {
 	        // On a deja un body, on supprime les fixtures associees
@@ -106,14 +118,14 @@ public class StaticSceneObject extends SceneObject {
 	        
 	        mObjectModel = PhysicsController.getInstance().getWorld().createBody(bd);
 	    }
-	    
-	    FixtureDef fd = new FixtureDef();
-        fd.density = 50;
-        fd.friction = 1f;
-        fd.restitution = 0f;
+
+	    mFixtureDefinition = new FixtureDef();
+	    mFixtureDefinition.density = 10;
+	    mFixtureDefinition.friction = 1f;
+	    mFixtureDefinition.restitution = 0f;
 	    
 	    // On charge et cree la fixture
-		loader.attachFixture(mObjectModel, "test01", fd, super.width);
+		loader.attachFixture(mObjectModel, "test01", mFixtureDefinition, super.width);
 		mObjectModelOrigin = loader.getOrigin("test01", super.width).cpy();
 	}
 	
@@ -121,7 +133,7 @@ public class StaticSceneObject extends SceneObject {
 	 * Charge  le sprite
 	 */
 	private void createSprites() {
-		mObjectTexture = new Texture(Gdx.files.internal("data/test/test.png"));
+		mObjectTexture = new Texture(Gdx.files.internal(mResource.file));
 		mObjectTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		
 		super.setRegion(new TextureRegion(mObjectTexture,mObjectTexture.getWidth(),mObjectTexture.getHeight()));
@@ -132,7 +144,8 @@ public class StaticSceneObject extends SceneObject {
 	/**
 	 * Met a jour la position du sprite
 	 */
-	public void update() {
+	@Override
+	public void act(float timeDelta) {
 	    super.originX = mObjectModelOrigin.x;
 	    super.originY = mObjectModelOrigin.y;
 	    super.rotation = mObjectModel.getAngle() * MathUtils.radiansToDegrees;

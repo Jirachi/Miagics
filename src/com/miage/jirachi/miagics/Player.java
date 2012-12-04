@@ -30,13 +30,13 @@ public class Player extends Character {
 	}
 	
 	@Override
-	public void update(float timeDelta) {
+	public void act(float timeDelta) {
 	    if (mTimeSincePosSync >= POS_SYNC_DELAY) {
 	        Packet packet = PacketMaker.makeSyncPosition(getPosition().x, getPosition().y);
 	        NetworkController.getInstance().sendUnreliable(packet);
 	        mTimeSincePosSync = 0.0f;
 	    }
 	    
-	    super.update(timeDelta);
+	    super.act(timeDelta);
 	}
 }

@@ -19,10 +19,9 @@ public class AnimatedSceneObject extends StaticSceneObject {
 		setRegion(mRegion);
 	}
 	
-	public void update() {
-	    float deltaTime = Gdx.graphics.getDeltaTime();
-	    
-		mTempsAccumule += deltaTime;
+	@Override
+	public void act(float timeDelta) {
+		mTempsAccumule += timeDelta;
 		
 		// TODO: Animation (utiliser le framework, cf redmine)
 	}
