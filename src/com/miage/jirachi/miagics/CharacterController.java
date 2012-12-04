@@ -4,8 +4,6 @@ package com.miage.jirachi.miagics;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
-
 public class CharacterController {
 	private static CharacterController mSingleton = null;
 	
@@ -64,14 +62,12 @@ public class CharacterController {
 	}
 	
 	/**
-	 * Met a jour tous les personnages
+	 * ---- Les mises a jour sont faites dans Character.act(..) - mais il se peut qu'on jour on ait
+	 * des actions communes a faire sur tous les personnages.
 	 * @param batch
 	 * @param camera
 	 */
 	public void update() {
-		for(int i=0;i<mCharacters.size();i++){
-			mCharacters.get(i).update(Gdx.graphics.getDeltaTime());
-		}
 	}
 	
 	/**

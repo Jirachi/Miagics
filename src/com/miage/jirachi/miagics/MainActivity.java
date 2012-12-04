@@ -1,6 +1,8 @@
 package com.miage.jirachi.miagics;
 import java.io.IOException;
 
+import org.json.JSONException;
+
 import android.os.Bundle;
 import android.util.Log;
 
@@ -23,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.ScaleTo;
 import com.badlogic.gdx.scenes.scene2d.actions.Sequence;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ClickListener;
+import com.miage.jirachi.resource.LevelLoader;
 
 public class MainActivity  extends AndroidApplication {
     public static Stage mStage;
@@ -77,7 +80,7 @@ public class MainActivity  extends AndroidApplication {
             // === TEST PHYSIQUE
             // On crŽŽ un sol
             PhysicsController.getInstance().createEdge(BodyType.StaticBody, -4000, -10, 3000, -10, 0);
-            test2 =  new StaticSceneObject("","data/test.png");
+            test2 =  new StaticSceneObject("","static/grassv2.rs");
             test2.setPosition(900, 10);
             test2.setScale(0.5f, 0.5f);
             mStage.addActor(test2);
@@ -96,6 +99,14 @@ public class MainActivity  extends AndroidApplication {
                     Sequence.$(ScaleTo.$(0.1f, 0.1f, 1.5f), ScaleTo.$(1.0f, 1.0f, 1.5f))));
 
             Gdx.input.setInputProcessor(this);
+            
+            // == test chargement d'un niveau
+            try {
+				LevelLoader.getInstance().loadLevel(LevelLoader.getInstance().loadScheme("test1.scn"));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
 
         @Override
@@ -106,24 +117,34 @@ public class MainActivity  extends AndroidApplication {
         @Override
         public void render() {
             Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+            
+            // Mise a jour des elements reseau
             NetworkController.getInstance().update();
-            mStage.act(Gdx.graphics.getDeltaTime());
+            
+            // Mise à jour du monde physique
             PhysicsController.getInstance().update();
             
-            //render all du chara controller
-            CharacterController.getInstance().update();
-            test2.update();
+            // Mise a jour de la scène
+            mStage.act(Gdx.graphics.getDeltaTime());
             
-            //test3.render(mBatch, mCamera);
-            
-            
-
-            // Affiche les ŽlŽments physiques (pour dŽbug)
+            // Centrage de la camera
             mCamera.position.set(CharacterController.getInstance().getSelf().getPosition().x, CharacterController.getInstance().getSelf().getPosition().y+5, 0);
             mCamera.update();
+            
+            // Position du bouton
             testBouton.x = mCamera.position.x - mCamera.viewportWidth / 2.0f;
             testBouton.y = mCamera.position.y - mCamera.viewportHeight / 2.0f;
+            
+            // Dessin de la scène
             mStage.draw();
+            
+           
+
+            // Mise à jour post-act des personnages
+            CharacterController.getInstance().update();
+            
+            //test3.render(mBatch, mCamera);
+            // Affiche les éléments physiques (pour débug)
             PhysicsController.getInstance().drawDebug(mCamera.combined);
         }
 

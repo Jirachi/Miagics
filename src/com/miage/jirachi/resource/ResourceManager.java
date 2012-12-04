@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -33,24 +34,24 @@ public class ResourceManager {
     }
     
     /**
-     * Constructeur par défaut
+     * Constructeur par d≈Ωfaut
      */
     public ResourceManager() {
-        
+        mResources = new HashMap<String, Resource>();
     }
     
     /**
-     * Renvoie la ressource correpsondant au fichier spécifié. Le fichier sera chargé si il n'est 
-     * pas déjà lu et chargé en mémoire.
+     * Renvoie la ressource correpsondant au fichier sp≈Ωcifi≈Ω. Le fichier sera charg≈Ω si il n'est 
+     * pas d≈ΩjÀÜ lu et charg≈Ω en m≈Ωmoire.
      * @param filename Fichier .rs a lire
      * @return La ressource du fichier
      */
     public Resource getResource(String filename) {
-        // Si on a déjà la ressource, on retourne ce qu'on sait déjà
+        // Si on a d≈ΩjÀÜ la ressource, on retourne ce qu'on sait d≈ΩjÀÜ
         if (mResources.containsKey(filename)) {
             return mResources.get(filename);
         } else {
-            // La ressource n'a jamais été demandée et n'est donc pas chargée,
+            // La ressource n'a jamais ≈Ωt≈Ω demand≈Ωe et n'est donc pas charg≈Ωe,
             // on le fait.
             FileHandle handle = Gdx.files.internal(filename);
             BufferedReader reader = new BufferedReader(new InputStreamReader(handle.read()));
@@ -68,7 +69,7 @@ public class ResourceManager {
                 Log.e("MIAGICS", "ERROR READING FILE " + filename + " IN RESOURCE MANAGER! " + e.getMessage());
             }
             
-            // On le parse et on récupère une resource
+            // On le parse et on r≈ΩcupÔøΩre une resource
             try {
                 Resource res = parseResource(fileContents);
                 mResources.put(filename, res);
@@ -80,14 +81,14 @@ public class ResourceManager {
             }
         }
         
-        // Si on arrive ici, c'est que quelque chose s'est vraiment mal passé.
+        // Si on arrive ici, c'est que quelque chose s'est vraiment mal pass≈Ω.
         return null;
     }
     
     /**
-     * Traite des données JSON de ressource
-     * @param data Les données JSON
-     * @return La ressource finale et parsée
+     * Traite des donn≈Ωes JSON de ressource
+     * @param data Les donn≈Ωes JSON
+     * @return La ressource finale et pars≈Ωe
      * @throws JSONException 
      */
     private Resource parseResource(String data) throws JSONException {
@@ -105,11 +106,11 @@ public class ResourceManager {
             Log.e("MIAGICS", "UNKNOWN RESOURCE TYPE: " + json_root.getString("type"));
         }
         
-        // Propriétés communes à tous les types de ressources
+        // Propri≈Ωt≈Ωs communes ÀÜ tous les types de ressources
         res.file = json_root.getString("file");
         res.type = json_root.getString("type");
         
-        // Propriétés spécifiques
+        // Propri≈Ωt≈Ωs sp≈Ωcifiques
         if (res instanceof ResourceAnimated) {
             JSONObject json_anim = json_root.getJSONObject("anim");
             ResourceAnimated ares = (ResourceAnimated)res;

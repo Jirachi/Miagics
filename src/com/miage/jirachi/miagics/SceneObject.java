@@ -30,9 +30,4 @@ public abstract class SceneObject extends Image {
 	 * Definit l'echelle de l'objet
 	 */
 	public abstract void setScale(float sX, float sY);
-	
-	/**
-	 * Met a jour l'objet
-	 */
-	public abstract void update();
 }
