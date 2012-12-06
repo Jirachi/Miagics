@@ -104,6 +104,10 @@ public class NetworkController {
 			case Opcodes.SMSG_SET_HEALTH:
 				PacketHandler.handleSetHealth(data);
 				break;
+				
+			case Opcodes.SMSG_JUMP:
+			    PacketHandler.handleJump(data);
+			    break;
 			    
 			default:
 			    Log.e("NetworkController", "Opcode non gere: " + packet.opcode);
