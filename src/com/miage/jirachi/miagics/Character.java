@@ -47,19 +47,10 @@ public class Character extends Image {
 	public final static int MOVE_BOTTOM = 4;*/
 	public final static int MOVE_NOT = 0;
 	
-	// TODO: Framework animation (voir redmine)
-<<<<<<< HEAD
-	private Animation mIdleAnimation;
-	private Animation mWalkAnimation;
-	
 	//Vie
 	protected int mHealth;
-=======
-	/*private Animation mIdleAnimation;
-	private Animation mWalkAnimation;*/
 	
 	protected CharacterAnimation mAnimations;
->>>>>>> 835b938824f94c3dcfed60492d1957ec44e359be
 
 	/**
 	 * Default constructor
