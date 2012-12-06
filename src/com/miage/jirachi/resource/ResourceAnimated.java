@@ -17,5 +17,6 @@ public class ResourceAnimated extends Resource {
         public int end_col;
         public int start_line;
         public int end_line;
+        public boolean loop;
     }
 }
