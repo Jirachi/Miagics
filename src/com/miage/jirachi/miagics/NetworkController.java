@@ -44,7 +44,10 @@ public class NetworkController {
 	    // On créé et connecte le client
 		mSocket = new Client();
 		mSocket.start();
-		//mSocket.connect(1000, ip, 37153, 35173);
+		
+		try {
+		    mSocket.connect(1000, ip, 37153, 35173);
+		} catch (Exception e) { }
 		
 		// On enregistre les classes serializables pour les transférer
 		Kryo kryo = mSocket.getKryo();

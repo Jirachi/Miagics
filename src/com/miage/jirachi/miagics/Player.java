@@ -31,6 +31,17 @@ public class Player extends Character {
 	}
 	
 	@Override
+	public void jump() {
+	    super.jump();
+	    
+	    // Si c'est nous qui sautons, on le signale au serveur
+	    if (this == CharacterController.getInstance().getSelf()) {
+	        Packet packet = PacketMaker.makeJump();
+	        NetworkController.getInstance().send(packet);
+	    }
+	}
+	
+	@Override
 	public void act(float timeDelta) {
 	    if (mTimeSincePosSync >= POS_SYNC_DELAY) {
 	        Packet packet = PacketMaker.makeSyncPosition(getPosition().x, getPosition().y);

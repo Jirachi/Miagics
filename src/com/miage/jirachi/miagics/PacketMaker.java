@@ -40,4 +40,10 @@ public class PacketMaker {
         
         return packet;
     }
+    
+    public static Packet makeJump() {
+        Packet packet = new Packet();
+        packet.opcode = Opcodes.CMSG_JUMP;
+        return packet;
+    }
 }
