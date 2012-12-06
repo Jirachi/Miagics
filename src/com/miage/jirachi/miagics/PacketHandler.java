@@ -72,4 +72,12 @@ public class PacketHandler {
     		c.setHealth(data.readInt());
     	}
     }
+    
+    public static void handleJump(BitStream data) {
+        long networkId = data.readLong();
+        Character c = CharacterController.getInstance().getCharacter(networkId);
+        if(c != null){
+            c.jump();
+        }
+    }
 }
