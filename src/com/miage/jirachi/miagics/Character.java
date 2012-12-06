@@ -32,6 +32,7 @@ public class Character extends Image {
 	protected Fixture mPhysicsSensorFixture;
 	protected long mLastGroundTime;
 	protected float mStillTime;
+	protected boolean mShouldJump;
 
 	// attributs d'animation
 	protected TextureRegion[][] mTextureRegions;
@@ -61,13 +62,9 @@ public class Character extends Image {
         // Initialisation des variables
         mTextureRegions = tex;
 		mOppose = MOVE_RIGHT;
+		mShouldJump = false;
 		
-		// Init des animations (TODO: Framework animation, voir redmine)
-		/*mIdleAnimation = new Animation(0.05f, tex[0]);
-		mWalkAnimation = new Animation(0.05f, tex[1]);
-		mIdleAnimation.setPlayMode(Animation.LOOP_PINGPONG);
-		mWalkAnimation.setPlayMode(Animation.LOOP_PINGPONG);*/
-		
+		// Init des animations
 		mAnimations = new CharacterAnimation(res, tex);
 		
 		// Construction du body physique
@@ -112,9 +109,14 @@ public class Character extends Image {
 	 */
 	@Override
 	public void act(float timeDelta) {
+	    boolean grounded = isTouchingGround();
+	    
 	    // Mise a jour de l'animation
-	    if (mMoveDirection == MOVE_NOT) {
+	    if (mMoveDirection == MOVE_NOT && grounded) {
 	        mAnimations.playAnimation("idle");
+	    }
+	    else if (!grounded) {
+	        mAnimations.playAnimation("land");
 	    }
 	    else {
 	        mAnimations.playAnimation("walk");
@@ -124,7 +126,6 @@ public class Character extends Image {
 	    
 		// Mise à jour des propriétés physiques
         Vector2 vel = mPhysicsBody.getLinearVelocity(); 
-        boolean grounded = isTouchingGround();
         
         // On estime être sur le sol si on le touche, ou si on l'a
         // récemment touché pour compenser le manque de précision
@@ -168,7 +169,18 @@ public class Character extends Image {
                 mPhysicsChestFixture.setFriction(0.2f);
                 mPhysicsSensorFixture.setFriction(0.2f);
             }
-        }       
+        } 
+        
+        // On traite le saut
+        if (mShouldJump) {
+            if (grounded) {
+                mPhysicsBody.setLinearVelocity(vel.x, 0);         
+                mPhysicsBody.setTransform(mPhysicsBody.getPosition().x, mPhysicsBody.getPosition().y + 0.01f, 0);
+                mPhysicsBody.applyLinearImpulse(0, 100, mPhysicsBody.getPosition().x, mPhysicsBody.getPosition().y);            
+            }
+            
+            mShouldJump = false;
+        }
  
         // Si on va a gauche et qu'on est pas déjË† Ë† la vitesse max
         if(mMoveDirection == MOVE_LEFT && vel.x > -mMoveSpeed) {
@@ -182,6 +194,13 @@ public class Character extends Image {
         
         super.x = getPosition().x;
         super.y = getPosition().y;
+	}
+	
+	/**
+	 * Fait sauter le personnage
+	 */
+	public void jump() {
+	    mShouldJump = true;
 	}
 
 	/**
