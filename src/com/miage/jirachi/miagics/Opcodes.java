@@ -39,4 +39,8 @@ public class Opcodes {
     
     //Vie
     public final static short SMSG_SET_HEALTH = 15;
+    
+    // Saut
+    public final static short CMSG_JUMP = 16;
+    public final static short SMSG_JUMP = 17;
 }
