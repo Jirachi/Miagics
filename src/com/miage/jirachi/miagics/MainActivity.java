@@ -27,10 +27,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.miage.jirachi.resource.LevelLoader;
+import com.miage.jirachi.resource.ResourceAnimated;
+import com.miage.jirachi.resource.ResourceManager;
 
 public class MainActivity  extends AndroidApplication {
     public static Stage mStage;
 
+    private int mMoveTouchId;
+    
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,15 +61,15 @@ public class MainActivity  extends AndroidApplication {
             //test3 = new AnimatedSceneObject("","animated/droid_from_android.png");
             Texture mTextBouton = new Texture(Gdx.files.internal("buttons/BoutonSaut.png"));
             Texture mTextBouton2 = new Texture(Gdx.files.internal("buttons/BoutonSaut2.png"));
-            TextureRegion mTextRBouton = new TextureRegion(mTextBouton,0,0,226,226);
-            TextureRegion mTextRBouton2 = new TextureRegion(mTextBouton2,0,0,226,226);
+            TextureRegion mTextRBouton = new TextureRegion(mTextBouton,0,0,64,64);
+            TextureRegion mTextRBouton2 = new TextureRegion(mTextBouton2,0,0,64,64);
             testBouton = new Button(mTextRBouton,mTextRBouton2);
-            testBouton.width = 60;
-            testBouton.height = 60;
+            testBouton.width = 50;
+            testBouton.height = 50;
             testBouton.setClickListener(new ClickListener(){
                 @Override
                 public void click(Actor arg0, float arg1, float arg2) {
-                	CharacterController.getInstance().getSelf().setHealth(CharacterController.getInstance().getSelf().getHealth()-10);
+                    CharacterController.getInstance().getSelf().jump();
                 }
 
             });
@@ -82,7 +86,7 @@ public class MainActivity  extends AndroidApplication {
             Texture persoTex = new Texture(Gdx.files.internal("animated/fox.png"));
             TextureRegion persoRegions[][] = TextureRegion.split(persoTex, persoTex.getWidth() / 3, persoTex.getHeight() / 9);
 
-            CharacterController.getInstance().setSelf(new Player(persoRegions));
+            CharacterController.getInstance().setSelf(new Player((ResourceAnimated)ResourceManager.getInstance().getResource("animated/fox.rs"), persoRegions));
 
             // === TEST PHYSIQUE
             // On crŽŽ un sol
@@ -213,20 +217,22 @@ public class MainActivity  extends AndroidApplication {
 
         @Override
         public boolean touchDown(int x, int y, int pointerId, int button) {
-            if (!mStage.touchDown(x,y,pointerId,button)) {
+            if (!mStage.touchDown(x,y,0,button)) {
                 if(x<=(Gdx.graphics.getWidth()/2)){
                     CharacterController.getInstance().getSelf().setMoveDirection(Character.MOVE_LEFT);
                 } else {
                     CharacterController.getInstance().getSelf().setMoveDirection(Character.MOVE_RIGHT);
                 }
+                
+                mMoveTouchId = pointerId;
             }	
 
             return true;
         }
 
         @Override
-        public boolean touchUp(int arg0, int arg1, int arg2, int arg3) {
-            if (!mStage.touchUp(arg0, arg1, arg2, arg3)) {
+        public boolean touchUp(int x, int y, int pointerId, int button) {
+            if (!mStage.touchUp(x, y, 0, button) && pointerId == mMoveTouchId) {
                 CharacterController.getInstance().getSelf().setMoveDirection(Character.MOVE_NOT);
             }
             return true;
