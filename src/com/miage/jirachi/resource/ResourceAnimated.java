@@ -9,7 +9,7 @@ public class ResourceAnimated extends Resource {
     public int height;
     public boolean reverse;
     public int speed;
-    List<AnimationDef> anims;
+    public List<AnimationDef> anims;
     
     public static class AnimationDef {
         public String name;

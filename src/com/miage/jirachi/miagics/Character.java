@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -16,12 +15,12 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.WorldManifold;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.miage.jirachi.resource.ResourceAnimated;
 
 public class Character extends Image {
 	protected Texture mTexture;
 	protected int mMoveDirection = MOVE_NOT;
 	
-	protected float mTempsAccumule;
 	protected float mMoveSpeed = 200.0f;
 	
 	// propriétés réseau
@@ -46,27 +45,30 @@ public class Character extends Image {
 	public final static int MOVE_NOT = 0;
 	
 	// TODO: Framework animation (voir redmine)
-	private Animation mIdleAnimation;
-	private Animation mWalkAnimation;
+	/*private Animation mIdleAnimation;
+	private Animation mWalkAnimation;*/
+	
+	protected CharacterAnimation mAnimations;
 
 	/**
 	 * Default constructor
 	 */
-	public Character(TextureRegion[][] tex) {
+	public Character(ResourceAnimated res, TextureRegion[][] tex) {
 	    // On recupere les regions de texture pour l'animation, et on les passe
 	    // a la superclasse
         super(tex[0][0]);
 	   
         // Initialisation des variables
         mTextureRegions = tex;
-		mTempsAccumule = 0;
 		mOppose = MOVE_RIGHT;
 		
 		// Init des animations (TODO: Framework animation, voir redmine)
-		mIdleAnimation = new Animation(0.05f, tex[0]);
+		/*mIdleAnimation = new Animation(0.05f, tex[0]);
 		mWalkAnimation = new Animation(0.05f, tex[1]);
 		mIdleAnimation.setPlayMode(Animation.LOOP_PINGPONG);
-		mWalkAnimation.setPlayMode(Animation.LOOP_PINGPONG);
+		mWalkAnimation.setPlayMode(Animation.LOOP_PINGPONG);*/
+		
+		mAnimations = new CharacterAnimation(res, tex);
 		
 		// Construction du body physique
 		buildPhysicsBody();
@@ -112,11 +114,13 @@ public class Character extends Image {
 	public void act(float timeDelta) {
 	    // Mise a jour de l'animation
 	    if (mMoveDirection == MOVE_NOT) {
-	        this.setRegion(mIdleAnimation.getKeyFrame(mTempsAccumule += timeDelta, true));
+	        mAnimations.playAnimation("idle");
 	    }
 	    else {
-	        this.setRegion(mWalkAnimation.getKeyFrame(mTempsAccumule += timeDelta, true));
+	        mAnimations.playAnimation("walk");
 	    }
+	    
+	    this.setRegion(mAnimations.getKeyFrame(timeDelta));
 	    
 		// Mise à jour des propriétés physiques
         Vector2 vel = mPhysicsBody.getLinearVelocity(); 

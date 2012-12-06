@@ -1,6 +1,7 @@
 package com.miage.jirachi.miagics;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.miage.jirachi.resource.ResourceAnimated;
 
 public class Player extends Character {
     // == Attributs
@@ -10,8 +11,8 @@ public class Player extends Character {
     protected float mTimeSincePosSync = 0;
 
     // == Constructeur
-    public Player(TextureRegion[][] tex) {
-        super(tex);
+    public Player(ResourceAnimated resourceAnimated, TextureRegion[][] tex) {
+        super(resourceAnimated, tex);
     }
     
     // == Methodes
