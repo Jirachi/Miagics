@@ -62,4 +62,12 @@ public class PacketHandler {
         Character c = CharacterController.getInstance().getCharacter(data.readLong());
         c.setPosition(data.readInt(), data.readInt());
     }
+    
+    public static void handleSetHealth(BitStream data){
+    	long networkId = data.readLong();
+    	Character c = CharacterController.getInstance().getCharacter(networkId);
+    	if(c != null){
+    		c.setHealth(data.readInt());
+    	}
+    }
 }

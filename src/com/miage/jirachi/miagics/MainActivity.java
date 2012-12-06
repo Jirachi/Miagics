@@ -25,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.ScaleTo;
 import com.badlogic.gdx.scenes.scene2d.actions.Sequence;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.miage.jirachi.resource.LevelLoader;
 
 public class MainActivity  extends AndroidApplication {
@@ -48,6 +49,7 @@ public class MainActivity  extends AndroidApplication {
     AnimatedSceneObject test3;
     Camera mCamera;
     Button testBouton;
+    Image testImage;
 
     public class GameClient implements ApplicationListener, InputProcessor {		
         @Override
@@ -63,10 +65,15 @@ public class MainActivity  extends AndroidApplication {
             testBouton.setClickListener(new ClickListener(){
                 @Override
                 public void click(Actor arg0, float arg1, float arg2) {
-                    System.out.println("lol");
+                	CharacterController.getInstance().getSelf().setHealth(CharacterController.getInstance().getSelf().getHealth()-10);
                 }
 
             });
+            Texture mTextBarre=new Texture(Gdx.files.internal("data/Life.png"));
+            TextureRegion mTextRBarre = new TextureRegion(mTextBarre, 0, 0, 32, 32);
+            testImage = new Image(mTextRBarre);
+            testImage.width = 150;
+            testImage.height = 30;
             mStage = new Stage(400, 240, true);
             backGTexture = new SceneBackground("data/background/decor1.png");
 
@@ -87,7 +94,7 @@ public class MainActivity  extends AndroidApplication {
 
             // === RESEAU
             try {
-                NetworkController.getInstance().connect("192.168.0.10", 37153);
+                NetworkController.getInstance().connect("192.168.229.146", 37153);
                 //NetworkController.getInstance().connect("friboks.ouverta.fr", 37153);
                 NetworkController.getInstance().send(PacketMaker.makeBootMe());
             } catch (IOException e) {
@@ -95,6 +102,7 @@ public class MainActivity  extends AndroidApplication {
             }
             mCamera = mStage.getCamera();
             mStage.addActor(testBouton);
+            mStage.addActor(testImage);
             testBouton.action(Parallel.$(Sequence.$(FadeOut.$(2), FadeIn.$(2)),
                     Sequence.$(ScaleTo.$(0.1f, 0.1f, 1.5f), ScaleTo.$(1.0f, 1.0f, 1.5f))));
 
@@ -135,6 +143,10 @@ public class MainActivity  extends AndroidApplication {
             testBouton.x = mCamera.position.x - mCamera.viewportWidth / 2.0f;
             testBouton.y = mCamera.position.y - mCamera.viewportHeight / 2.0f;
             
+            testImage.x = mCamera.position.x + mCamera.viewportWidth/2 - 160;
+            testImage.y = mCamera.position.y - mCamera.viewportHeight/2 + 10;
+            testImage.scaleX = CharacterController.getInstance().getSelf().getHealth()/100.0f;
+            Log.e("health", "aaaaaaaaaaaaa " + ((float)CharacterController.getInstance().getSelf().getHealth()*150.f/100.f));
             // Dessin de la scène
             mStage.draw();
             

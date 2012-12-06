@@ -2,6 +2,8 @@ package com.miage.jirachi.miagics;
 
 import java.util.List;
 
+import android.util.Log;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -48,6 +50,9 @@ public class Character extends Image {
 	// TODO: Framework animation (voir redmine)
 	private Animation mIdleAnimation;
 	private Animation mWalkAnimation;
+	
+	//Vie
+	protected int mHealth;
 
 	/**
 	 * Default constructor
@@ -73,6 +78,8 @@ public class Character extends Image {
 		
 		// On definit l'echelle du perso (1/2 de la taille reelle)
 		this.scaleX = this.scaleY = 0.5f;
+		
+		mHealth = 100;
 	}
 
 	/**
@@ -280,6 +287,18 @@ public class Character extends Image {
         }
         return false;
     }
+	
+	public void setHealth(int health){
+		mHealth = health;
+		if (mHealth < 0){
+			mHealth = 0;
+		}
+	}
+	
+	public int getHealth(){
+		
+		return mHealth;
+	}
 	
 	/**
 	 * Definit l'identifiant reseau du personnage

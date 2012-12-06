@@ -44,7 +44,7 @@ public class NetworkController {
 	    // On créé et connecte le client
 		mSocket = new Client();
 		mSocket.start();
-		mSocket.connect(1000, ip, 37153, 35173);
+		//mSocket.connect(1000, ip, 37153, 35173);
 		
 		// On enregistre les classes serializables pour les transférer
 		Kryo kryo = mSocket.getKryo();
@@ -98,6 +98,10 @@ public class NetworkController {
 			    PacketHandler.handlePlayerExisting(data);
 			    break;
 			    
+			case Opcodes.SMSG_SET_HEALTH:
+				PacketHandler.handleSetHealth(data);
+				break;
+			    
 			default:
 			    Log.e("NetworkController", "Opcode non gere: " + packet.opcode);
 			    break;
@@ -112,7 +116,9 @@ public class NetworkController {
 	 * @param packet
 	 */
 	public void send(Packet packet) {
-		mSocket.sendTCP(packet);
+		try {
+			mSocket.sendTCP(packet);
+		} catch (Exception e) { }
 	}
 	
 	/**
@@ -120,6 +126,8 @@ public class NetworkController {
 	 * @param packet
 	 */
 	public void sendUnreliable(Packet packet) {
-	    mSocket.sendUDP(packet);
+	    try {
+	    	mSocket.sendUDP(packet);
+	    } catch (Exception e) {}
 	}
 }
