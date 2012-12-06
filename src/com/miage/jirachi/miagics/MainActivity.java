@@ -26,6 +26,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.Sequence;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ClickListener;
 import com.miage.jirachi.resource.LevelLoader;
+import com.miage.jirachi.resource.ResourceAnimated;
+import com.miage.jirachi.resource.ResourceManager;
 
 public class MainActivity  extends AndroidApplication {
     public static Stage mStage;
@@ -75,7 +77,7 @@ public class MainActivity  extends AndroidApplication {
             Texture persoTex = new Texture(Gdx.files.internal("animated/fox.png"));
             TextureRegion persoRegions[][] = TextureRegion.split(persoTex, persoTex.getWidth() / 3, persoTex.getHeight() / 9);
 
-            CharacterController.getInstance().setSelf(new Player(persoRegions));
+            CharacterController.getInstance().setSelf(new Player((ResourceAnimated)ResourceManager.getInstance().getResource("animated/fox.rs"), persoRegions));
 
             // === TEST PHYSIQUE
             // On crŽŽ un sol
@@ -87,7 +89,7 @@ public class MainActivity  extends AndroidApplication {
 
             // === RESEAU
             try {
-                NetworkController.getInstance().connect("192.168.0.10", 37153);
+                NetworkController.getInstance().connect("192.168.229.146", 37153);
                 //NetworkController.getInstance().connect("friboks.ouverta.fr", 37153);
                 NetworkController.getInstance().send(PacketMaker.makeBootMe());
             } catch (IOException e) {
