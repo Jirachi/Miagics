@@ -15,11 +15,18 @@ public class CharacterAnimation {
     private TextureRegion[][] mAnimationMatrix;
     private Map<String, Animation> mAnimationMap;
     private float mAccumulatedTime;
+    private float mEnforcedTime;
+    private String mEnforcedAnimation;
     
     // Nombre de colonnes dans la grille de sprites. On part du principe
     // ici qu'il y aura toujours 3 colonnes.
     public final static int ANIM_GRID_COLS = 3;
     
+    /**
+     * Constructeur
+     * @param res Resource qui correspond au personnage
+     * @param textures TextureRegions qui ont ete decoupees
+     */
     public CharacterAnimation(ResourceAnimated res, TextureRegion[][] textures) {
         mResource = res;
         mAnimationMatrix = textures;
@@ -47,18 +54,62 @@ public class CharacterAnimation {
             }
             
             Animation gdxAnim = new Animation(0.05f, frames);
-            gdxAnim.setPlayMode(Animation.LOOP_PINGPONG);
+            
+            if (anim.loop) { 
+                gdxAnim.setPlayMode(Animation.LOOP_PINGPONG);
+            } else {
+                gdxAnim.setPlayMode(Animation.NORMAL);
+            }
+            
             mAnimationMap.put(anim.name, gdxAnim);
         }
     }
     
+    /**
+     * Force la lecture (sans boucler) d'une animation avant l'animation a jouer
+     * definie par playAnimation.
+     * Utile pour afficher le saut avant qu'il tombe par exemple.
+     * @param animName
+     */
+    public void enforceSingleAnimation(String animName) {
+        mEnforcedAnimation = animName;
+        mEnforcedTime = 0;
+    }
+    
+    /**
+     * Definit l'animation a jouer
+     * @param animName Nom de l'animation
+     */
     public void playAnimation(String animName) {
         mCurrentAnimation = animName;
     }
     
+    /**
+     * Retourne la frame a afficher en fonction de l'animation en cours
+     * @param delta
+     * @return
+     */
     public TextureRegion getKeyFrame(float delta) {
         mAccumulatedTime += delta;
-        return mAnimationMap.get(mCurrentAnimation).getKeyFrame(mAccumulatedTime, true);
+        
+        if (mEnforcedAnimation != null) {
+            // On a une animation forcee, on la joue jusqu'a ce qu'elle soit finie
+            Animation forcedAnim = mAnimationMap.get(mEnforcedAnimation);
+            
+            TextureRegion region = forcedAnim.getKeyFrame(mEnforcedTime);
+            mEnforcedTime += delta;
+            
+            if (forcedAnim.isAnimationFinished(mEnforcedTime)) {
+                // L'animation est finie, on jouera l'animation mCurrentAnimation a la prochaine frame
+                mEnforcedAnimation = null;
+                mEnforcedTime = 0;
+            }
+            
+            return region;
+        }
+        else {
+            return mAnimationMap.get(mCurrentAnimation).getKeyFrame(mAccumulatedTime, true);
+        }
     }
 }
 
