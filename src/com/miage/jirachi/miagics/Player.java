@@ -46,7 +46,7 @@ public class Player extends Character {
 	    mTimeSincePosSync += timeDelta;
 	    
 	    if (mTimeSincePosSync >= POS_SYNC_DELAY && this == CharacterController.getInstance().getSelf()) {
-	        Packet packet = PacketMaker.makeSyncPosition(getPosition().x, getPosition().y);
+	        Packet packet = PacketMaker.makeSyncPosition(getRawPosition().x, getRawPosition().y);
 	        NetworkController.getInstance().sendUnreliable(packet);
 	        mTimeSincePosSync = 0.0f;
 	    }

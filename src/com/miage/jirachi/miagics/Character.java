@@ -106,6 +106,10 @@ public class Character extends Image {
 		return mPhysicsBody.getWorldCenter().sub(super.width/5.0f, super.height/5.0f);
 	}
 
+	public Vector2 getRawPosition() {
+	    return mPhysicsBody.getPosition();
+	}
+	
 	/**
 	 * Met a jour le personnage
 	 * @param timeDelta Temps depuis le dernier rendu
