@@ -35,6 +35,7 @@ public class PacketMaker {
         data.write(x);
         data.write(y);
         
+        packet.opcode = Opcodes.CMSG_SYNC_POSITION;
         packet.data = data.getBytesP();
         
         return packet;

@@ -136,6 +136,12 @@ public class ResourceManager {
                 animDef.start_line = json_anims_entry.getInt("start_line");
                 animDef.end_line = json_anims_entry.getInt("end_line");
                 
+                // Boucle par defaut
+                if (json_anims_entry.has("loop"))
+                    animDef.loop = json_anims_entry.getBoolean("loop");
+                else
+                    animDef.loop = true;
+                
                 ares.anims.add(animDef);
             }
         }

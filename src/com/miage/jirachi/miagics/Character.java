@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -18,12 +17,12 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.WorldManifold;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.miage.jirachi.resource.ResourceAnimated;
 
 public class Character extends Image {
 	protected Texture mTexture;
 	protected int mMoveDirection = MOVE_NOT;
 	
-	protected float mTempsAccumule;
 	protected float mMoveSpeed = 200.0f;
 	
 	// propriétés réseau
@@ -35,6 +34,7 @@ public class Character extends Image {
 	protected Fixture mPhysicsSensorFixture;
 	protected long mLastGroundTime;
 	protected float mStillTime;
+	protected boolean mShouldJump;
 
 	// attributs d'animation
 	protected TextureRegion[][] mTextureRegions;
@@ -48,30 +48,34 @@ public class Character extends Image {
 	public final static int MOVE_NOT = 0;
 	
 	// TODO: Framework animation (voir redmine)
+<<<<<<< HEAD
 	private Animation mIdleAnimation;
 	private Animation mWalkAnimation;
 	
 	//Vie
 	protected int mHealth;
+=======
+	/*private Animation mIdleAnimation;
+	private Animation mWalkAnimation;*/
+	
+	protected CharacterAnimation mAnimations;
+>>>>>>> 835b938824f94c3dcfed60492d1957ec44e359be
 
 	/**
 	 * Default constructor
 	 */
-	public Character(TextureRegion[][] tex) {
+	public Character(ResourceAnimated res, TextureRegion[][] tex) {
 	    // On recupere les regions de texture pour l'animation, et on les passe
 	    // a la superclasse
         super(tex[0][0]);
 	   
         // Initialisation des variables
         mTextureRegions = tex;
-		mTempsAccumule = 0;
 		mOppose = MOVE_RIGHT;
+		mShouldJump = false;
 		
-		// Init des animations (TODO: Framework animation, voir redmine)
-		mIdleAnimation = new Animation(0.05f, tex[0]);
-		mWalkAnimation = new Animation(0.05f, tex[1]);
-		mIdleAnimation.setPlayMode(Animation.LOOP_PINGPONG);
-		mWalkAnimation.setPlayMode(Animation.LOOP_PINGPONG);
+		// Init des animations
+		mAnimations = new CharacterAnimation(res, tex);
 		
 		// Construction du body physique
 		buildPhysicsBody();
@@ -117,17 +121,23 @@ public class Character extends Image {
 	 */
 	@Override
 	public void act(float timeDelta) {
+	    boolean grounded = isTouchingGround();
+	    
 	    // Mise a jour de l'animation
-	    if (mMoveDirection == MOVE_NOT) {
-	        this.setRegion(mIdleAnimation.getKeyFrame(mTempsAccumule += timeDelta, true));
+	    if (mMoveDirection == MOVE_NOT && grounded) {
+	        mAnimations.playAnimation("idle");
+	    }
+	    else if (!grounded) {
+	        mAnimations.playAnimation("land");
 	    }
 	    else {
-	        this.setRegion(mWalkAnimation.getKeyFrame(mTempsAccumule += timeDelta, true));
+	        mAnimations.playAnimation("walk");
 	    }
+	    
+	    this.setRegion(mAnimations.getKeyFrame(timeDelta));
 	    
 		// Mise à jour des propriétés physiques
         Vector2 vel = mPhysicsBody.getLinearVelocity(); 
-        boolean grounded = isTouchingGround();
         
         // On estime être sur le sol si on le touche, ou si on l'a
         // récemment touché pour compenser le manque de précision
@@ -171,7 +181,21 @@ public class Character extends Image {
                 mPhysicsChestFixture.setFriction(0.2f);
                 mPhysicsSensorFixture.setFriction(0.2f);
             }
-        }       
+        } 
+        
+        // On traite le saut
+        if (mShouldJump) {
+            if (grounded) {
+                mPhysicsBody.setLinearVelocity(vel.x, 0);         
+                mPhysicsBody.setTransform(mPhysicsBody.getPosition().x, mPhysicsBody.getPosition().y + 0.01f, 0);
+                mPhysicsBody.applyLinearImpulse(0, 100, mPhysicsBody.getPosition().x, mPhysicsBody.getPosition().y);
+                
+                // On joue l'anim de saut
+                mAnimations.enforceSingleAnimation("jump");
+            }
+            
+            mShouldJump = false;
+        }
  
         // Si on va a gauche et qu'on est pas déjË† Ë† la vitesse max
         if(mMoveDirection == MOVE_LEFT && vel.x > -mMoveSpeed) {
@@ -185,6 +209,13 @@ public class Character extends Image {
         
         super.x = getPosition().x;
         super.y = getPosition().y;
+	}
+	
+	/**
+	 * Fait sauter le personnage
+	 */
+	public void jump() {
+	    mShouldJump = true;
 	}
 
 	/**
