@@ -150,7 +150,7 @@ public class MainActivity  extends AndroidApplication {
             testImage.x = mCamera.position.x + mCamera.viewportWidth/2 - 160;
             testImage.y = mCamera.position.y - mCamera.viewportHeight/2 + 10;
             testImage.scaleX = CharacterController.getInstance().getSelf().getHealth()/100.0f;
-            Log.e("health", "aaaaaaaaaaaaa " + ((float)CharacterController.getInstance().getSelf().getHealth()*150.f/100.f));
+
             // Dessin de la scène
             mStage.draw();
             
