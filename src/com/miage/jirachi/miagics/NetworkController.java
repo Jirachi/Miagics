@@ -109,6 +109,10 @@ public class NetworkController {
 			    PacketHandler.handleJump(data);
 			    break;
 			    
+			case Opcodes.SMSG_SYNC_POSITION:
+			    PacketHandler.handleSetPosition(data);
+			    break;
+			    
 			default:
 			    Log.e("NetworkController", "Opcode non gere: " + packet.opcode);
 			    break;

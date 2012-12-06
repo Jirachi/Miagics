@@ -80,4 +80,15 @@ public class PacketHandler {
             c.jump();
         }
     }
+    
+    public static void handleSetPosition(BitStream data) {
+        long networkId = data.readLong();
+        float x = data.readFloat();
+        float y = data.readFloat();
+        
+        Character c = CharacterController.getInstance().getCharacter(networkId);
+        if(c != null){
+            c.setPosition(x, y);
+        }
+    }
 }
