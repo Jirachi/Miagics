@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.miage.jirachi.resource.ResourceAnimated;
 import com.miage.jirachi.resource.ResourceAnimated.AnimationDef;
 
-public class CharacterAnimation {
+public class AnimationProvider {
     private ResourceAnimated mResource;
     private String mCurrentAnimation;
     private TextureRegion[][] mAnimationMatrix;
@@ -27,7 +27,7 @@ public class CharacterAnimation {
      * @param res Resource qui correspond au personnage
      * @param textures TextureRegions qui ont ete decoupees
      */
-    public CharacterAnimation(ResourceAnimated res, TextureRegion[][] textures) {
+    public AnimationProvider(ResourceAnimated res, TextureRegion[][] textures) {
         mResource = res;
         mAnimationMatrix = textures;
         mCurrentAnimation = "idle";

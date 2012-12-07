@@ -113,6 +113,14 @@ public class NetworkController {
 			    PacketHandler.handleSetPosition(data);
 			    break;
 			    
+			case Opcodes.SMSG_SPAWN_GAMEOBJECT:
+			    PacketHandler.handleSpawnGameObject(data);
+			    break;
+			    
+			case Opcodes.SMSG_GAMEOBJECT_FORCE_POSITION:
+			    PacketHandler.handleGameObjectForcePosition(data);
+			    break;
+			    
 			default:
 			    Log.e("NetworkController", "Opcode non gere: " + packet.opcode);
 			    break;

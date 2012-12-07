@@ -1,5 +1,7 @@
 package com.miage.jirachi.miagics;
 
+import aurelienribon.bodyeditor.BodyEditorLoader;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
@@ -15,6 +17,7 @@ public class PhysicsController {
     
     private World mPhysicsWorld = null;
     private Box2DDebugRenderer mDebugRenderer = null;
+    private BodyEditorLoader mBodyEditorLoader;
     
     // Instantiate and create unique class instance
     public static PhysicsController getInstance() {
@@ -30,6 +33,14 @@ public class PhysicsController {
         // Create physics world
         mPhysicsWorld = new World(new Vector2(0, -300), true);
         mDebugRenderer = new Box2DDebugRenderer();
+        mBodyEditorLoader = new BodyEditorLoader(Gdx.files.internal("miagics_collisions.json"));
+    }
+    
+    /**
+     * Retourne le chargeur de fixture
+     */
+    public BodyEditorLoader getBodyEditorLoader() {
+        return mBodyEditorLoader;
     }
     
     /**

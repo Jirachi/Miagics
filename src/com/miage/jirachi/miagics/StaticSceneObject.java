@@ -3,7 +3,6 @@ package com.miage.jirachi.miagics;
 import java.util.ArrayList;
 
 import android.util.Log;
-import aurelienribon.bodyeditor.BodyEditorLoader;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -84,10 +83,7 @@ public class StaticSceneObject extends SceneObject {
 	/**
 	 * Cree l'objet physique
 	 */
-	private void createObject() {
-		// TODO: changer les chaines de caracteres par l'argument.
-	    BodyEditorLoader loader = new BodyEditorLoader(Gdx.files.internal("miagics_collisions.json"));
-		
+	private void createObject() {		
 	    // Si on a deja un body, on le supprime
 	    if (mObjectModel != null) {
 	        // On a deja un body, on supprime les fixtures associees
@@ -129,8 +125,8 @@ public class StaticSceneObject extends SceneObject {
 	    String fixtureName = mResource.file.substring(mResource.file.lastIndexOf('/')+1);
 	    
 	    try {
-	    	loader.attachFixture(mObjectModel, fixtureName, mFixtureDefinition, super.width);
-			mObjectModelOrigin = loader.getOrigin(fixtureName, super.width).cpy();	
+	    	PhysicsController.getInstance().getBodyEditorLoader().attachFixture(mObjectModel, fixtureName, mFixtureDefinition, super.width);
+			mObjectModelOrigin = PhysicsController.getInstance().getBodyEditorLoader().getOrigin(fixtureName, super.width).cpy();	
 	    }
 	    catch (RuntimeException ex) {
 	    	Log.e("Physics", "Couldn't load physics model for resource " + fixtureName);
