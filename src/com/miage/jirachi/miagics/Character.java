@@ -2,8 +2,6 @@ package com.miage.jirachi.miagics;
 
 import java.util.List;
 
-import android.util.Log;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -50,7 +48,7 @@ public class Character extends Image {
 	//Vie
 	protected int mHealth;
 	
-	protected CharacterAnimation mAnimations;
+	protected AnimationProvider mAnimations;
 
 	/**
 	 * Default constructor
@@ -66,7 +64,7 @@ public class Character extends Image {
 		mShouldJump = false;
 		
 		// Init des animations
-		mAnimations = new CharacterAnimation(res, tex);
+		mAnimations = new AnimationProvider(res, tex);
 		
 		// Construction du body physique
 		buildPhysicsBody();

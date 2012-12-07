@@ -8,6 +8,7 @@ public class PacketMaker {
 		return packet;
 	}
 	
+	// CMSG_MOVE_...
     public static Packet makeMovePacket(short direction) {
     	Packet packet = new Packet();
         
@@ -28,6 +29,7 @@ public class PacketMaker {
         return packet;
     }
     
+    // CMSG_SYNC_POSITION
     public static Packet makeSyncPosition(float x, float y) {
         Packet packet = new Packet();
         BitStream data = new BitStream();
@@ -41,9 +43,17 @@ public class PacketMaker {
         return packet;
     }
     
+    // CMSG_JUMP
     public static Packet makeJump() {
         Packet packet = new Packet();
         packet.opcode = Opcodes.CMSG_JUMP;
+        return packet;
+    }
+    
+    // CMSG_USE_GAMEOBJECT
+    public static Packet makeUseGameObject() {
+        Packet packet = new Packet();
+        packet.opcode = Opcodes.CMSG_USE_GAMEOBJECT;
         return packet;
     }
 }

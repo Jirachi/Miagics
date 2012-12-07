@@ -43,4 +43,13 @@ public class Opcodes {
     // Saut
     public final static short CMSG_JUMP = 16;
     public final static short SMSG_JUMP = 17;
+    
+    // GameObjects
+    public final static short SMSG_SPAWN_GAMEOBJECT = 18;
+    public final static short SMSG_GAMEOBJECT_ANIMATE = 19;
+    public final static short SMSG_GAMEOBJECT_MOVE = 20;
+    public final static short SMSG_GAMEOBJECT_FORCE_POSITION = 21;
+    
+    public final static short CMSG_USE_GAMEOBJECT = 22;
+    public final static short SMSG_GAMEOBJECT_CHANGE_PHYSICS = 23;
 }

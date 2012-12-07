@@ -1,28 +1,33 @@
 package com.miage.jirachi.miagics;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.miage.jirachi.resource.ResourceAnimated;
 
 public class AnimatedSceneObject extends StaticSceneObject {
-	protected Texture mTexture;
-	
-	protected TextureRegion mRegion;
-	protected float mTempsAccumule;
+	protected AnimationProvider mAnimations;
+	protected TextureRegion[][] mTextureRegions;
+	protected ResourceAnimated mResourceAnimated;
 	
 	public AnimatedSceneObject(String refName, String path) {
 		super(refName, path);
+		mResourceAnimated = (ResourceAnimated)mResource;
 		
-		mTexture = new Texture(Gdx.files.internal(path));
-		mRegion = new TextureRegion(mTexture, 0, 0, 50, 86);
+		mTextureRegions = TextureRegion.split(mObjectTexture, 
+		        mObjectTexture.getWidth() / mResourceAnimated.columns, 
+		        mObjectTexture.getHeight() / mResourceAnimated.lines);
 		
-		setRegion(mRegion);
+		mAnimations = new AnimationProvider((ResourceAnimated)mResource, mTextureRegions);
 	}
 	
 	@Override
 	public void act(float timeDelta) {
-		mTempsAccumule += timeDelta;
-		
-		// TODO: Animation (utiliser le framework, cf redmine)
+		this.setRegion(mAnimations.getKeyFrame(timeDelta));
+	}
+	
+	/**
+	 * Retourne l'instance du framework animation
+	 */
+	public AnimationProvider getAnimationProvider() {
+	    return mAnimations;
 	}
 }
