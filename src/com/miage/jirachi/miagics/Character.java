@@ -152,7 +152,7 @@ public class Character extends Image {
         // On calcule le temps qu'on a passé sans bouger, et on applique l'inertie (90%)
         if (mMoveDirection == MOVE_NOT) {         
             mStillTime += Gdx.graphics.getDeltaTime();
-            mPhysicsBody.setLinearVelocity(vel.x * 0.9f, vel.y);
+            mPhysicsBody.setLinearVelocity(vel.x * 0.0f, vel.y);
         }
         else { 
             mStillTime = 0;

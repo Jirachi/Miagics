@@ -42,7 +42,7 @@ public class NetworkController {
 	 */
 	public void connect(String ip, int port) throws IOException {
 	    // On crŽŽ et connecte le client
-		mSocket = new Client();
+		mSocket = new Client(256, 256);
 		mSocket.start();
 		mSocket.setIdleThreshold(1000000);
 		mSocket.setKeepAliveTCP(2000);
@@ -150,7 +150,7 @@ public class NetworkController {
 	 */
 	public void sendUnreliable(Packet packet) {
 	    try {
-	    	mSocket.sendTCP(packet);
+	    	mSocket.sendUDP(packet);
 	    } catch (Exception e) {}
 	}
 }
