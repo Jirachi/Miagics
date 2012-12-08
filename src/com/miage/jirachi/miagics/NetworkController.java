@@ -44,10 +44,14 @@ public class NetworkController {
 	    // On créé et connecte le client
 		mSocket = new Client();
 		mSocket.start();
+		mSocket.setIdleThreshold(1000000);
+		mSocket.setKeepAliveTCP(2000);
 		
 		try {
 		    mSocket.connect(1000, ip, 37153, 35173);
 		} catch (Exception e) { }
+		
+		mSocket.updateReturnTripTime();
 		
 		// On enregistre les classes serializables pour les transférer
 		Kryo kryo = mSocket.getKryo();
@@ -146,7 +150,7 @@ public class NetworkController {
 	 */
 	public void sendUnreliable(Packet packet) {
 	    try {
-	    	mSocket.sendUDP(packet);
+	    	mSocket.sendTCP(packet);
 	    } catch (Exception e) {}
 	}
 }
