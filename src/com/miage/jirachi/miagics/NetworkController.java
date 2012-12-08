@@ -12,7 +12,7 @@ import com.esotericsoftware.kryonet.Listener;
 
 public class NetworkController {
 	private static NetworkController mSingleton = null;
-	private Client mSocket;
+	private NotSlowClient mSocket;
 	private ArrayList<Packet> mPackets;
 
 	/**
@@ -42,10 +42,8 @@ public class NetworkController {
 	 */
 	public void connect(String ip, int port) throws IOException {
 	    // On crŽŽ et connecte le client
-		mSocket = new Client(256, 256);
+		mSocket = new NotSlowClient(256, 256);
 		mSocket.start();
-		mSocket.setIdleThreshold(1000000);
-		mSocket.setKeepAliveTCP(2000);
 		
 		try {
 		    mSocket.connect(1000, ip, 37153, 35173);
