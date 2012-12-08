@@ -98,7 +98,7 @@ public class MainActivity  extends AndroidApplication {
 
             // === RESEAU
             try {
-                NetworkController.getInstance().connect("192.168.229.146", 37153);
+                NetworkController.getInstance().connect("192.168.0.11", 37153);
                 //NetworkController.getInstance().connect("friboks.ouverta.fr", 37153);
                 NetworkController.getInstance().send(PacketMaker.makeBootMe());
             } catch (IOException e) {
