@@ -21,7 +21,7 @@
 				"start_col":0,
 				"end_col":2,
 				"start_line":4,
-				"end_line":7
+				"end_line":6
 			}
 		]
 	}

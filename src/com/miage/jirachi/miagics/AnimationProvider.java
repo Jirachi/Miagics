@@ -19,10 +19,7 @@ public class AnimationProvider {
     private float mAccumulatedTime;
     private float mEnforcedTime;
     private String mEnforcedAnimation;
-    
-    // Nombre de colonnes dans la grille de sprites. On part du principe
-    // ici qu'il y aura toujours 3 colonnes.
-    public final static int ANIM_GRID_COLS = 3;
+   
     
     /**
      * Constructeur
@@ -43,7 +40,7 @@ public class AnimationProvider {
             AnimationDef anim = iter.next();
             
             // On calcule le nombre d'images dans l'animation
-            int frameCount = (anim.end_col - anim.start_col + 1) + (anim.end_line-anim.start_line) * ANIM_GRID_COLS;
+            int frameCount = (anim.end_col - anim.start_col + 1) + (anim.end_line-anim.start_line) * res.columns;
             
             // On cree un tableau avec chaque image de l'animation, dans l'ordre
             TextureRegion[] frames = new TextureRegion[frameCount];
@@ -74,6 +71,11 @@ public class AnimationProvider {
      * @param animName
      */
     public void enforceSingleAnimation(String animName) {
+    	if (!mAnimationMap.containsKey(animName)) {
+    		Log.w("AnimationProvider", "Animation " + animName + " doesn't exist - not enforced");
+    		return;
+    	}
+    	
         mEnforcedAnimation = animName;
         mEnforcedTime = 0;
     }
@@ -83,7 +85,7 @@ public class AnimationProvider {
      * @param animName Nom de l'animation
      */
     public void playAnimation(String animName) {
-    	if (mAnimationMap.containsKey(animName)) {
+    	if (!mAnimationMap.containsKey(animName)) {
     		Log.w("AnimationProvider", "Animation " + animName + " doesn't exist - not played");
     		return;
     	}
@@ -115,7 +117,10 @@ public class AnimationProvider {
             return region;
         }
         else {
-            return mAnimationMap.get(mCurrentAnimation).getKeyFrame(mAccumulatedTime, true);
+        	if (mAnimationMap.containsKey(mCurrentAnimation))
+        		return mAnimationMap.get(mCurrentAnimation).getKeyFrame(mAccumulatedTime, true);
+        	else
+        		return null;
         }
     }
 }
