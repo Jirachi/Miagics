@@ -222,14 +222,20 @@ public class Character extends Image {
 	 * Fait sauter le personnage
 	 */
 	public void jump() {
+		if (mHealth <= 0)
+			return;
+		
 	    mShouldJump = true;
-	    Log.e("DEBUG", "Pos: " + getPosition().x + " ; " + getPosition().y);
+	    //Log.e("DEBUG", "Pos: " + getPosition().x + " ; " + getPosition().y);
 	}
 	
 	/**
 	 * Fait frapper le personnage
 	 */
 	public void fight() {
+		if (mHealth <= 0)
+			return;
+		
 		// On joue l'anim de kick
 		if (isTouchingGround()) {
 			mAnimations.enforceSingleAnimation("punch");
