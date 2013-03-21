@@ -7,7 +7,7 @@
 		"width":123,
 		"height":110,
 		"reverse":false,
-		"speed":50,
+		"speed":40,
 		"anims":[
 			{
 				"name":"idle",

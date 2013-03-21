@@ -99,7 +99,7 @@ public class AnimationProvider {
      * @return
      */
     public TextureRegion getKeyFrame(float delta) {
-        mAccumulatedTime += delta;
+        mAccumulatedTime += delta/2.0f;
         
         if (mEnforcedAnimation != null) {
             // On a une animation forcee, on la joue jusqu'a ce qu'elle soit finie

@@ -7,7 +7,7 @@
 		"width":56,
 		"height":80,
 		"reverse":true,
-		"speed":110,
+		"speed":80,
 		"anims":[
 			{
 				"name":"idle",
@@ -76,6 +76,13 @@
 			{
 				"name":"die",
 				"start_col":0,
+				"end_col":2,
+				"start_line":8,
+				"end_line":8
+			},
+			{
+				"name":"dead",
+				"start_col":2,
 				"end_col":2,
 				"start_line":8,
 				"end_line":8

@@ -2,6 +2,8 @@ package com.miage.jirachi.miagics;
 
 import java.util.List;
 
+import android.util.Log;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -90,6 +92,9 @@ public class Character extends Image {
 	 * @param direction
 	 */
 	public void setMoveDirection(int direction) {
+		if (mHealth <= 0)
+			return;
+		
 	    if (direction != MOVE_NOT && mOppose != direction) {
 	        // On tourne les textures puisqu'on va dans l'autre sens
 	        flipTextures();
@@ -120,13 +125,15 @@ public class Character extends Image {
 	    boolean grounded = isTouchingGround();
 	    
 	    // Mise a jour de l'animation
-	    if (mMoveDirection == MOVE_NOT && grounded) {
+	    if (mHealth <= 0) {
+	    	mAnimations.playAnimation("die");
+//	    	mAnimations.enforceSingleAnimation("die"); // dead
+	    } else if (mMoveDirection == MOVE_NOT && grounded) {
 	        mAnimations.playAnimation("idle");
 	    }
 	    else if (!grounded) {
 	        mAnimations.playAnimation("land");
-	    }
-	    else {
+	    } else {
 	        mAnimations.playAnimation("walk");
 	    }
 	    
@@ -143,6 +150,10 @@ public class Character extends Image {
             if (System.nanoTime() - mLastGroundTime < 100000000) {
                 grounded = true;
             }
+        }
+        
+        if (mHealth <= 0) {
+        	mMoveSpeed = 0;
         }
  
         // On limite la vitesse de mouvement à la vitesse max
@@ -212,6 +223,7 @@ public class Character extends Image {
 	 */
 	public void jump() {
 	    mShouldJump = true;
+	    Log.e("DEBUG", "Pos: " + getPosition().x + " ; " + getPosition().y);
 	}
 	
 	/**
