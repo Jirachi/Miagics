@@ -84,10 +84,10 @@ public class MainActivity  extends AndroidApplication {
             
             // === TEST PHYSIQUE
             
-            test2 =  new StaticSceneObject("","static/grassv2.rs");
+           /* test2 =  new StaticSceneObject("","static/grassv2.rs");
             test2.setPosition(900, 10);
             test2.setScale(0.5f, 0.5f);
-            mStage.addActor(test2);
+            mStage.addActor(test2);*/
 
             // === RESEAU
             try {
@@ -149,12 +149,9 @@ public class MainActivity  extends AndroidApplication {
             // Dessin de la scène
             mStage.draw();
             
-           
-
             // Mise à jour post-act des personnages
             CharacterController.getInstance().update();
             
-            //test3.render(mBatch, mCamera);
             // Affiche les éléments physiques (pour débug)
             PhysicsController.getInstance().drawDebug(mCamera.combined);
         }

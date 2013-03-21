@@ -45,7 +45,7 @@ public class LevelLoader {
     			// On crée une entité statique
     			// TODO: Stocker l'entité?
     			StaticSceneObject entity = new StaticSceneObject(entityTemplate.getProperty("ref_name"), entityTemplate.getProperty("resource"));
-    			entity.setPosition(Float.parseFloat(entityTemplate.getProperty("pos_x")), Float.parseFloat(entityTemplate.getProperty("pos_y")));
+    			entity.setPosition(Float.parseFloat(entityTemplate.getProperty("pos_x")), -Float.parseFloat(entityTemplate.getProperty("pos_y")) - entity.getTexture().getHeight());
     			entity.setDensity(Float.parseFloat(entityTemplate.getProperty("density", "20.0")));
     			
     			if (entityTemplate.getProperty("isDynamic", "false").equals("false"))

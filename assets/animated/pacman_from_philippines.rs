@@ -24,8 +24,16 @@
 				"end_line":1
 			},
 			{
-				"name":"propulsion_walk",
+				"name":"jump",
 				"start_col":0,
+				"end_col":1,
+				"start_line":2,
+				"end_line":2,
+				"loop":false
+			},
+			{
+				"name":"land",
+				"start_col":2,
 				"end_col":2,
 				"start_line":2,
 				"end_line":2

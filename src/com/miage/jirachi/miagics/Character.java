@@ -45,6 +45,8 @@ public class Character extends Image {
 	public final static int MOVE_BOTTOM = 4;*/
 	public final static int MOVE_NOT = 0;
 	
+	public final static float JUMP_IMPULSE = 150.0f;
+	
 	//Vie
 	protected int mHealth;
 	
@@ -181,7 +183,7 @@ public class Character extends Image {
             if (grounded) {
                 mPhysicsBody.setLinearVelocity(vel.x, 0);         
                 mPhysicsBody.setTransform(mPhysicsBody.getPosition().x, mPhysicsBody.getPosition().y + 0.01f, 0);
-                mPhysicsBody.applyLinearImpulse(0, 100, mPhysicsBody.getPosition().x, mPhysicsBody.getPosition().y);
+                mPhysicsBody.applyLinearImpulse(0, JUMP_IMPULSE, mPhysicsBody.getPosition().x, mPhysicsBody.getPosition().y);
                 
                 // On joue l'anim de saut
                 mAnimations.enforceSingleAnimation("jump");

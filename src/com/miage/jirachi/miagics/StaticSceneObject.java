@@ -151,8 +151,13 @@ public class StaticSceneObject extends SceneObject {
 	 */
 	@Override
 	public void act(float timeDelta) {
-	    super.originX = mObjectModelOrigin.x;
-	    super.originY = mObjectModelOrigin.y;
+		if (mObjectModelOrigin != null) {
+			super.originX = mObjectModelOrigin.x;
+	    	super.originY = mObjectModelOrigin.y;
+		} else {
+			super.originX = 0;
+			super.originY = 0;
+		}
 	    super.rotation = mObjectModel.getAngle() * MathUtils.radiansToDegrees;
 	    super.x = getPosition().x;
 	    super.y = getPosition().y;
@@ -174,6 +179,10 @@ public class StaticSceneObject extends SceneObject {
 	    mObjectModel.setTransform(x,y,0);
 	}
 
+	public Texture getTexture() {
+		return mObjectTexture;
+	}
+	
     @Override
     /**
      * Definit l'echelle de l'objet
