@@ -1,0 +1,28 @@
+{
+	"file":"animated/buffallo.png",
+	"type":"animated",
+	"anim":{
+		"columns":3,
+		"lines":7,
+		"width":123,
+		"height":110,
+		"reverse":false,
+		"speed":50,
+		"anims":[
+			{
+				"name":"idle",
+				"start_col":0,
+				"end_col":2,
+				"start_line":0,
+				"end_line":3
+			},
+			{
+				"name":"walk",
+				"start_col":0,
+				"end_col":2,
+				"start_line":4,
+				"end_line":7
+			}
+		]
+	}
+}
