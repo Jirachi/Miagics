@@ -49,20 +49,20 @@ public class PacketHandler {
     
     // SMSG_PLAYER_CONNECT
     public static void handlePlayerConnect(BitStream data) {
-        Texture persoTex = new Texture(Gdx.files.internal("animated/droid_from_android.png"));
+        Texture persoTex = new Texture(Gdx.files.internal("animated/buffallo.png"));
         TextureRegion persoRegions[][] = TextureRegion.split(persoTex, persoTex.getWidth() / 3, persoTex.getHeight() / 9);
         
-        Player newPlayer = new Player((ResourceAnimated)ResourceManager.getInstance().getResource("animated/droid_from_android.rs"), persoRegions);
+        Player newPlayer = new Player((ResourceAnimated)ResourceManager.getInstance().getResource("animated/buffallo.rs"), persoRegions);
         newPlayer.setNetworkId(data.readLong());
         CharacterController.getInstance().addCharacter(newPlayer);
     }
     
     // SMSG_PLAYER_EXISTING
     public static void handlePlayerExisting(BitStream data) {
-        Texture persoTex = new Texture(Gdx.files.internal("animated/droid_from_android.png"));
+        Texture persoTex = new Texture(Gdx.files.internal("animated/buffallo.png"));
         TextureRegion persoRegions[][] = TextureRegion.split(persoTex, persoTex.getWidth() / 3, persoTex.getHeight() / 9);
         
-        Player newPlayer = new Player((ResourceAnimated)ResourceManager.getInstance().getResource("animated/droid_from_android.rs"), persoRegions);
+        Player newPlayer = new Player((ResourceAnimated)ResourceManager.getInstance().getResource("animated/buffallo.rs"), persoRegions);
         newPlayer.setNetworkId(data.readLong());
         newPlayer.setPosition(data.readFloat(), data.readFloat());
 

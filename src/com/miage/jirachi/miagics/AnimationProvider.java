@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import android.util.Log;
+
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.miage.jirachi.resource.ResourceAnimated;
@@ -81,6 +83,11 @@ public class AnimationProvider {
      * @param animName Nom de l'animation
      */
     public void playAnimation(String animName) {
+    	if (mAnimationMap.containsKey(animName)) {
+    		Log.w("AnimationProvider", "Animation " + animName + " doesn't exist - not played");
+    		return;
+    	}
+    	
         mCurrentAnimation = animName;
     }
     
