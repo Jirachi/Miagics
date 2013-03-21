@@ -45,8 +45,8 @@ public class MainActivity  extends AndroidApplication {
     SceneBackground backGTexture;
     AnimatedSceneObject test3;
     Camera mCamera;
-    Button testBouton;
-    Image testImage;
+    Button mJumpButton;
+    Image mHealthBar;
 
     public class GameClient implements ApplicationListener, InputProcessor {		
         @Override
@@ -59,10 +59,10 @@ public class MainActivity  extends AndroidApplication {
             TextureRegionDrawable TextDBouton = new TextureRegionDrawable(mTextRBouton);
             TextureRegionDrawable TextDBouton2 = new TextureRegionDrawable(mTextRBouton2);
             
-            testBouton = new Button(TextDBouton,TextDBouton2);
-            testBouton.setWidth(50);
-            testBouton.setHeight(50);
-            testBouton.addListener(new ClickListener(){
+            mJumpButton = new Button(TextDBouton,TextDBouton2);
+            mJumpButton.setWidth(50);
+            mJumpButton.setHeight(50);
+            mJumpButton.addListener(new ClickListener(){
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     CharacterController.getInstance().getSelf().jump();
@@ -71,9 +71,9 @@ public class MainActivity  extends AndroidApplication {
             });
             Texture mTextBarre=new Texture(Gdx.files.internal("data/Life.png"));
             TextureRegion mTextRBarre = new TextureRegion(mTextBarre, 0, 0, 32, 32);
-            testImage = new Image(mTextRBarre);
-            testImage.setWidth(150);
-            testImage.setHeight(30);
+            mHealthBar = new Image(mTextRBarre);
+            mHealthBar.setWidth(150);
+            mHealthBar.setHeight(30);
             mStage = new Stage(400, 240, true);
             backGTexture = new SceneBackground("data/background/decor1.png");
 
@@ -96,8 +96,8 @@ public class MainActivity  extends AndroidApplication {
                 Log.e("Reseau", e.getMessage());
             }
             mCamera = mStage.getCamera();
-            mStage.addActor(testBouton);
-            mStage.addActor(testImage);
+            mStage.addActor(mJumpButton);
+            mStage.addActor(mHealthBar);
 
             Gdx.input.setInputProcessor(this);
             
@@ -136,12 +136,15 @@ public class MainActivity  extends AndroidApplication {
 	            mCamera.update();
 	            
 	            // Position du bouton
-	            testBouton.setX(mCamera.position.x - mCamera.viewportWidth / 2.0f);
-	            testBouton.setY(mCamera.position.y - mCamera.viewportHeight / 2.0f);
+	            mJumpButton.setX(mCamera.position.x - mCamera.viewportWidth / 2.0f);
+	            mJumpButton.setY(mCamera.position.y - mCamera.viewportHeight / 2.0f);
 	            
-	            testImage.setX(mCamera.position.x + mCamera.viewportWidth/2 - 160);
-	            testImage.setY(mCamera.position.y - mCamera.viewportHeight/2 + 10);
-	            testImage.setScaleX(self.getHealth()/100.0f);
+	            mHealthBar.setX(mCamera.position.x + mCamera.viewportWidth/2 - 160);
+	            mHealthBar.setY(mCamera.position.y - mCamera.viewportHeight/2 + 10);
+	            mHealthBar.setScaleX(self.getHealth()/100.0f);
+	            
+	            mJumpButton.toFront();
+	            mHealthBar.toFront();
             }
 
             // Dessin de la scène
