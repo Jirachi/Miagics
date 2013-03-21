@@ -2,19 +2,27 @@ package com.miage.jirachi.miagics;
 
 import android.util.Log;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.miage.jirachi.resource.ResourceAnimated;
-import com.miage.jirachi.resource.ResourceManager;
 
 
 public class PacketHandler {
     // SMSG_BOOT_ME
     public static void handleBootMe(BitStream data) {
         long myNetworkId = data.readLong();
-        CharacterController.getInstance().getSelf().setNetworkId(myNetworkId);
+        String mySkin = data.readString();
+        
+        //CharacterController.getInstance().getSelf().setNetworkId(myNetworkId);
+        Player newPlayer = CharacterController.createCharacter(mySkin);
+        newPlayer.setNetworkId(myNetworkId);
+        
+        CharacterController.getInstance().setSelf(newPlayer);
+        
+        /*
+        Texture persoTex = new Texture(Gdx.files.internal("animated/fox.png"));
+        TextureRegion persoRegions[][] = TextureRegion.split(persoTex, persoTex.getWidth() / 3, persoTex.getHeight() / 9);
+
+        new Player((ResourceAnimated)ResourceManager.getInstance().getResource("animated/fox.rs"), persoRegions));*/
+
     }
     
     // SMSG_MOVE_LEFT
@@ -49,15 +57,23 @@ public class PacketHandler {
     
     // SMSG_PLAYER_CONNECT
     public static void handlePlayerConnect(BitStream data) {
-        Player newPlayer = CharacterController.createCharacter("buffallo");
-        newPlayer.setNetworkId(data.readLong());
+    	long networkId = data.readLong();
+    	String skin = data.readString();
+    	
+        Player newPlayer = CharacterController.createCharacter(skin);
+        newPlayer.setNetworkId(networkId);
     }
     
     // SMSG_PLAYER_EXISTING
     public static void handlePlayerExisting(BitStream data) {
-    	Player newPlayer = CharacterController.createCharacter("buffallo");
-        newPlayer.setNetworkId(data.readLong());
-        newPlayer.setPosition(data.readFloat(), data.readFloat());
+    	long networkId = data.readLong();
+    	float posX = data.readFloat();
+    	float posY = data.readFloat();
+    	String skin = data.readString();
+    	
+    	Player newPlayer = CharacterController.createCharacter(skin);
+        newPlayer.setNetworkId(networkId);
+        newPlayer.setPosition(posX, posY);
     }
     
     // SMSG_SYNC_POSITION

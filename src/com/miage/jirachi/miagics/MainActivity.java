@@ -27,8 +27,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.miage.jirachi.resource.LevelLoader;
-import com.miage.jirachi.resource.ResourceAnimated;
-import com.miage.jirachi.resource.ResourceManager;
 
 public class MainActivity  extends AndroidApplication {
     public static Stage mStage;
@@ -82,12 +80,8 @@ public class MainActivity  extends AndroidApplication {
             backGTexture = new SceneBackground("data/background/decor1.png");
 
             mStage.addActor(backGTexture);
-            // == TEST: Personnage self
-            Texture persoTex = new Texture(Gdx.files.internal("animated/fox.png"));
-            TextureRegion persoRegions[][] = TextureRegion.split(persoTex, persoTex.getWidth() / 3, persoTex.getHeight() / 9);
-
-            CharacterController.getInstance().setSelf(new Player((ResourceAnimated)ResourceManager.getInstance().getResource("animated/fox.rs"), persoRegions));
-
+           
+            
             // === TEST PHYSIQUE
             // On crŽŽ un sol
             PhysicsController.getInstance().createEdge(BodyType.StaticBody, -4000, -10, 3000, -10, 0);
@@ -140,16 +134,20 @@ public class MainActivity  extends AndroidApplication {
             mStage.act(Gdx.graphics.getDeltaTime());
             
             // Centrage de la camera
-            mCamera.position.set(CharacterController.getInstance().getSelf().getPosition().x, CharacterController.getInstance().getSelf().getPosition().y+5, 0);
-            mCamera.update();
+            Player self = CharacterController.getInstance().getSelf();
             
-            // Position du bouton
-            testBouton.x = mCamera.position.x - mCamera.viewportWidth / 2.0f;
-            testBouton.y = mCamera.position.y - mCamera.viewportHeight / 2.0f;
-            
-            testImage.x = mCamera.position.x + mCamera.viewportWidth/2 - 160;
-            testImage.y = mCamera.position.y - mCamera.viewportHeight/2 + 10;
-            testImage.scaleX = CharacterController.getInstance().getSelf().getHealth()/100.0f;
+            if (self != null) {
+	            mCamera.position.set(self.getPosition().x, self.getPosition().y+5, 0);
+	            mCamera.update();
+	            
+	            // Position du bouton
+	            testBouton.x = mCamera.position.x - mCamera.viewportWidth / 2.0f;
+	            testBouton.y = mCamera.position.y - mCamera.viewportHeight / 2.0f;
+	            
+	            testImage.x = mCamera.position.x + mCamera.viewportWidth/2 - 160;
+	            testImage.y = mCamera.position.y - mCamera.viewportHeight/2 + 10;
+	            testImage.scaleX = self.getHealth()/100.0f;
+            }
 
             // Dessin de la scène
             mStage.draw();
@@ -217,11 +215,15 @@ public class MainActivity  extends AndroidApplication {
 
         @Override
         public boolean touchDown(int x, int y, int pointerId, int button) {
+        	Player self = CharacterController.getInstance().getSelf();
+        	if (self == null)
+        		return true;
+        	
             if (!mStage.touchDown(x,y,0,button)) {
                 if(x<=(Gdx.graphics.getWidth()/2)){
-                    CharacterController.getInstance().getSelf().setMoveDirection(Character.MOVE_LEFT);
+                	self.setMoveDirection(Character.MOVE_LEFT);
                 } else {
-                    CharacterController.getInstance().getSelf().setMoveDirection(Character.MOVE_RIGHT);
+                	self.setMoveDirection(Character.MOVE_RIGHT);
                 }
                 
                 mMoveTouchId = pointerId;
@@ -232,8 +234,12 @@ public class MainActivity  extends AndroidApplication {
 
         @Override
         public boolean touchUp(int x, int y, int pointerId, int button) {
+        	Player self = CharacterController.getInstance().getSelf();
+        	if (self == null)
+        		return true;
+        	
             if (!mStage.touchUp(x, y, 0, button) && pointerId == mMoveTouchId) {
-                CharacterController.getInstance().getSelf().setMoveDirection(Character.MOVE_NOT);
+            	self.setMoveDirection(Character.MOVE_NOT);
             }
             return true;
         }

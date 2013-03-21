@@ -3,7 +3,7 @@
 	"type":"animated",
 	"anim":{
 		"columns":3,
-		"lines":10,
+		"lines":9,
 		"width":56,
 		"height":80,
 		"reverse":true,

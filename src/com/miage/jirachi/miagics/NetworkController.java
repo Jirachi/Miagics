@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import android.util.Log;
 
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
