@@ -47,6 +47,17 @@ public class Player extends Character {
 	}
 	
 	@Override
+	public void fight() {
+		super.fight();
+		
+		// If it's the self fighting, tell server (in English this time \o/)
+		if (this == CharacterController.getInstance().getSelf()) {
+			Packet packet = PacketMaker.makeFight();
+			NetworkController.getInstance().send(packet);
+		}
+	}
+	
+	@Override
 	public void act(float timeDelta) {
 	    mTimeSincePosSync += timeDelta;
 	    

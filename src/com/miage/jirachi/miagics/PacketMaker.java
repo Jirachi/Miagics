@@ -56,4 +56,11 @@ public class PacketMaker {
         packet.opcode = Opcodes.CMSG_USE_GAMEOBJECT;
         return packet;
     }
+    
+    // CMSG_FIGHT
+    public static Packet makeFight() {
+    	Packet packet = new Packet();
+    	packet.opcode = Opcodes.CMSG_FIGHT;
+    	return packet;
+    }
 }

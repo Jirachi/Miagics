@@ -46,20 +46,25 @@ public class MainActivity  extends AndroidApplication {
     AnimatedSceneObject test3;
     Camera mCamera;
     Button mJumpButton;
+    Button mHitButton;
     Image mHealthBar;
 
     public class GameClient implements ApplicationListener, InputProcessor {		
         @Override
         public void create() {
-            //test3 = new AnimatedSceneObject("","animated/droid_from_android.png");
-            Texture mTextBouton = new Texture(Gdx.files.internal("buttons/BoutonSaut.png"));
-            Texture mTextBouton2 = new Texture(Gdx.files.internal("buttons/BoutonSaut2.png"));
-            TextureRegion mTextRBouton = new TextureRegion(mTextBouton,0,0,64,64);
-            TextureRegion mTextRBouton2 = new TextureRegion(mTextBouton2,0,0,64,64);
-            TextureRegionDrawable TextDBouton = new TextureRegionDrawable(mTextRBouton);
-            TextureRegionDrawable TextDBouton2 = new TextureRegionDrawable(mTextRBouton2);
+        	// Early setup
+        	mStage = new Stage(400, 240, true);
+        	mCamera = mStage.getCamera();
+        	Gdx.input.setInputProcessor(this);
+        	
+        	// =====================
+        	// Setup the UI
+        	
+        	// Jump button
+            TextureRegionDrawable texBtnJump1 = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/BoutonSaut.png")),0,0,64,64));
+            TextureRegionDrawable texBtnJump2 = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/BoutonSaut2.png")),0,0,64,64));
             
-            mJumpButton = new Button(TextDBouton,TextDBouton2);
+            mJumpButton = new Button(texBtnJump1,texBtnJump2);
             mJumpButton.setWidth(50);
             mJumpButton.setHeight(50);
             mJumpButton.addListener(new ClickListener(){
@@ -69,45 +74,59 @@ public class MainActivity  extends AndroidApplication {
                 }
 
             });
-            Texture mTextBarre=new Texture(Gdx.files.internal("data/Life.png"));
-            TextureRegion mTextRBarre = new TextureRegion(mTextBarre, 0, 0, 32, 32);
+            
+            // Hit button
+            TextureRegionDrawable texBtnHit1 = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/BoutonFrappe.png")),0,0,64,64));
+            TextureRegionDrawable texBtnHit2 = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/BoutonFrappe2.png")),0,0,64,64));
+            
+            mHitButton = new Button(texBtnHit1,texBtnHit2);
+            mHitButton.setWidth(50);
+            mHitButton.setHeight(50);
+            mHitButton.addListener(new ClickListener(){
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    CharacterController.getInstance().getSelf().fight();
+                }
+
+            });
+            
+            // Health bar
+            TextureRegion mTextRBarre = new TextureRegion(new Texture(Gdx.files.internal("data/Life.png")), 0, 0, 32, 32);
             mHealthBar = new Image(mTextRBarre);
             mHealthBar.setWidth(150);
             mHealthBar.setHeight(30);
-            mStage = new Stage(400, 240, true);
+            
+            // Add them all to the scene
+            mStage.addActor(mJumpButton);
+            mStage.addActor(mHitButton);
+            mStage.addActor(mHealthBar);
+            
+            // Setup a background repeating texture
             backGTexture = new SceneBackground("data/background/decor1.png");
-
             mStage.addActor(backGTexture);
-           
             
-            // === TEST PHYSIQUE
             
-           /* test2 =  new StaticSceneObject("","static/grassv2.rs");
-            test2.setPosition(900, 10);
-            test2.setScale(0.5f, 0.5f);
-            mStage.addActor(test2);*/
+            // =======================
+            // Load the test level !
+            
+            try {
+				LevelLoader.getInstance().loadLevel(LevelLoader.getInstance().loadScheme("test1.scn"));
+			} catch (JSONException e) {
+				Log.e("Level load", e.getMessage());
+			}
 
-            // === RESEAU
+            // =======================
+            // Connect to the server !
             try {
                 NetworkController.getInstance().connect("192.168.0.11", 37153);
+                
                 //NetworkController.getInstance().connect("friboks.ouverta.fr", 37153);
+                //NetworkController.getInstance().connect("xplod-devbox.bbqdroid.org", 37153);
+                
                 NetworkController.getInstance().send(PacketMaker.makeBootMe());
             } catch (IOException e) {
                 Log.e("Reseau", e.getMessage());
             }
-            mCamera = mStage.getCamera();
-            mStage.addActor(mJumpButton);
-            mStage.addActor(mHealthBar);
-
-            Gdx.input.setInputProcessor(this);
-            
-            // == test chargement d'un niveau
-            try {
-				LevelLoader.getInstance().loadLevel(LevelLoader.getInstance().loadScheme("test1.scn"));
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
         }
 
         @Override
@@ -139,11 +158,15 @@ public class MainActivity  extends AndroidApplication {
 	            mJumpButton.setX(mCamera.position.x - mCamera.viewportWidth / 2.0f);
 	            mJumpButton.setY(mCamera.position.y - mCamera.viewportHeight / 2.0f);
 	            
+	            mHitButton.setX(mCamera.position.x - mCamera.viewportWidth / 2.0f + 70);
+	            mHitButton.setY(mCamera.position.y - mCamera.viewportHeight / 2.0f);
+	            
 	            mHealthBar.setX(mCamera.position.x + mCamera.viewportWidth/2 - 160);
 	            mHealthBar.setY(mCamera.position.y - mCamera.viewportHeight/2 + 10);
 	            mHealthBar.setScaleX(self.getHealth()/100.0f);
 	            
 	            mJumpButton.toFront();
+	            mHitButton.toFront();
 	            mHealthBar.toFront();
             }
 

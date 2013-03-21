@@ -213,7 +213,27 @@ public class Character extends Image {
 	public void jump() {
 	    mShouldJump = true;
 	}
+	
+	/**
+	 * Fait frapper le personnage
+	 */
+	public void fight() {
+		// On joue l'anim de kick
+		if (isTouchingGround()) {
+			mAnimations.enforceSingleAnimation("punch");
+		} else {
+			mAnimations.enforceSingleAnimation("propulsion_punch");
+		}
+	}
 
+	/**
+	 * Le personnage recoit un coup
+	 */
+	public void hit(int amount) {
+		// On joue l'anim qu'on a mal
+		mAnimations.enforceSingleAnimation("hit");
+	}
+	
 	/**
 	 * Mirroir horizontal des textures
 	 */

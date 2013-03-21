@@ -122,6 +122,22 @@ public class NetworkController {
 			    PacketHandler.handleGameObjectForcePosition(data);
 			    break;
 			    
+			case Opcodes.SMSG_GAMEOBJECT_MOVE:
+				PacketHandler.handleGameObjectMove(data);
+				break;
+				
+			case Opcodes.SMSG_GAMEOBJECT_ANIMATE:
+				PacketHandler.handleGameObjectAnimate(data);
+				break;
+				
+			case Opcodes.SMSG_FIGHT:
+				PacketHandler.handleFight(data);
+				break;
+				
+			case Opcodes.SMSG_HIT:
+				PacketHandler.handleHit(data);
+				break;
+			    
 			default:
 			    Log.e("NetworkController", "Opcode non gere: " + packet.opcode);
 			    break;

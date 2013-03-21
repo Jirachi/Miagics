@@ -31,7 +31,7 @@ public class PacketHandler {
         long networkId = data.readLong();
         Character c = CharacterController.getInstance().getCharacter(networkId);
 
-        if (c != null) {
+        if (c != null && c != CharacterController.getInstance().getSelf()) {
             c.setMoveDirection(Character.MOVE_LEFT);
         }
     }
@@ -41,7 +41,7 @@ public class PacketHandler {
         long networkId = data.readLong();
         Character c = CharacterController.getInstance().getCharacter(networkId);
 
-        if (c != null) {
+        if (c != null && c != CharacterController.getInstance().getSelf()) {
             c.setMoveDirection(Character.MOVE_RIGHT);
         }
     }
@@ -51,7 +51,7 @@ public class PacketHandler {
         long networkId = data.readLong();
         Character c = CharacterController.getInstance().getCharacter(networkId);
 
-        if (c != null) {
+        if (c != null && c != CharacterController.getInstance().getSelf()) {
             c.setMoveDirection(Character.MOVE_NOT);
         }
     }
@@ -96,7 +96,7 @@ public class PacketHandler {
     public static void handleJump(BitStream data) {
         long networkId = data.readLong();
         Character c = CharacterController.getInstance().getCharacter(networkId);
-        if(c != null){
+        if(c != null && c != CharacterController.getInstance().getSelf()){
             c.jump();
         }
     }
@@ -108,7 +108,7 @@ public class PacketHandler {
         float y = data.readFloat();
         
         Character c = CharacterController.getInstance().getCharacter(networkId);
-        if(c != null){
+        if(c != null) {
             c.setPosition(x, y);
         }
     }
@@ -175,5 +175,28 @@ public class PacketHandler {
         
         GameObject obj = GameObjectController.getInstance().getGameObject(networkId);
         obj.moveTo(targetX, targetY, time);
+    }
+    
+    // SMSG_FIGHT
+    public static void handleFight(BitStream data) {
+    	long networkId = data.readLong();
+    	
+    	Character c = CharacterController.getInstance().getCharacter(networkId);
+        if(c != null && c != CharacterController.getInstance().getSelf()){
+            c.fight();
+        }
+    }
+    
+    // SMSG_HIT
+    public static void handleHit(BitStream data) {
+    	long networkId = data.readLong();
+    	int amount = data.readInt();
+    	
+    	if (amount > 0) { /* TODO: Show in UI */ }
+    	
+    	Character c = CharacterController.getInstance().getCharacter(networkId);
+        if(c != null){
+            c.hit(amount);
+        }
     }
 }
