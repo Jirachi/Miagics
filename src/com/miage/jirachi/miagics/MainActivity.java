@@ -83,8 +83,7 @@ public class MainActivity  extends AndroidApplication {
            
             
             // === TEST PHYSIQUE
-            // On crŽŽ un sol
-            PhysicsController.getInstance().createEdge(BodyType.StaticBody, -4000, -10, 3000, -10, 0);
+            
             test2 =  new StaticSceneObject("","static/grassv2.rs");
             test2.setPosition(900, 10);
             test2.setScale(0.5f, 0.5f);
@@ -101,8 +100,6 @@ public class MainActivity  extends AndroidApplication {
             mCamera = mStage.getCamera();
             mStage.addActor(testBouton);
             mStage.addActor(testImage);
-            testBouton.action(Parallel.$(Sequence.$(FadeOut.$(2), FadeIn.$(2)),
-                    Sequence.$(ScaleTo.$(0.1f, 0.1f, 1.5f), ScaleTo.$(1.0f, 1.0f, 1.5f))));
 
             Gdx.input.setInputProcessor(this);
             

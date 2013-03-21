@@ -16,6 +16,7 @@ public class PacketHandler {
         newPlayer.setNetworkId(myNetworkId);
         
         CharacterController.getInstance().setSelf(newPlayer);
+        newPlayer.setPosition(350, 300);
         
         /*
         Texture persoTex = new Texture(Gdx.files.internal("animated/fox.png"));
