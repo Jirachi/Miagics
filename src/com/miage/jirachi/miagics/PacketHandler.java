@@ -49,26 +49,15 @@ public class PacketHandler {
     
     // SMSG_PLAYER_CONNECT
     public static void handlePlayerConnect(BitStream data) {
-        Texture persoTex = new Texture(Gdx.files.internal("animated/buffallo.png"));
-        ResourceAnimated persoRes = (ResourceAnimated)ResourceManager.getInstance().getResource("animated/buffallo.rs");
-        TextureRegion persoRegions[][] = TextureRegion.split(persoTex, persoTex.getWidth() / persoRes.columns, persoTex.getHeight() / persoRes.lines);
-        
-        Player newPlayer = new Player(persoRes, persoRegions);
+        Player newPlayer = CharacterController.createCharacter("buffallo");
         newPlayer.setNetworkId(data.readLong());
-        CharacterController.getInstance().addCharacter(newPlayer);
     }
     
     // SMSG_PLAYER_EXISTING
     public static void handlePlayerExisting(BitStream data) {
-    	Texture persoTex = new Texture(Gdx.files.internal("animated/buffallo.png"));
-        ResourceAnimated persoRes = (ResourceAnimated)ResourceManager.getInstance().getResource("animated/buffallo.rs");
-        TextureRegion persoRegions[][] = TextureRegion.split(persoTex, persoTex.getWidth() / persoRes.columns, persoTex.getHeight() / persoRes.lines);
-        
-        Player newPlayer = new Player(persoRes, persoRegions);
+    	Player newPlayer = CharacterController.createCharacter("buffallo");
         newPlayer.setNetworkId(data.readLong());
         newPlayer.setPosition(data.readFloat(), data.readFloat());
-
-        CharacterController.getInstance().addCharacter(newPlayer);
     }
     
     // SMSG_SYNC_POSITION

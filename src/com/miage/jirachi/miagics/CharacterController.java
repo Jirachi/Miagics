@@ -4,6 +4,12 @@ package com.miage.jirachi.miagics;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.miage.jirachi.resource.ResourceAnimated;
+import com.miage.jirachi.resource.ResourceManager;
+
 public class CharacterController {
 	private static CharacterController mSingleton = null;
 	
@@ -30,6 +36,20 @@ public class CharacterController {
 		mSingleton=null;
 		mSelf=null;
 		
+	}
+	
+	/**
+	 * Créée un joueur
+	 */
+	public static Player createCharacter(String texName) {
+		Texture persoTex = new Texture(Gdx.files.internal("animated/" + texName + ".png"));
+        ResourceAnimated persoRes = (ResourceAnimated)ResourceManager.getInstance().getResource("animated/" + texName + ".rs");
+        TextureRegion persoRegions[][] = TextureRegion.split(persoTex, persoTex.getWidth() / persoRes.columns, persoTex.getHeight() / persoRes.lines);
+        
+        Player newPlayer = new Player(persoRes, persoRegions);
+        CharacterController.getInstance().addCharacter(newPlayer);
+        
+        return newPlayer;
 	}
 
 	/**

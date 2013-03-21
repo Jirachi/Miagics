@@ -15,7 +15,7 @@ public class Player extends Character {
         super(resourceAnimated, tex);
     }
     
-    // == Methodes
+    // == Methodes   
 	@Override
 	public void setMoveDirection(int direction) {
 	    // Si le joueur qui a change de direction, c'est nous, alors
