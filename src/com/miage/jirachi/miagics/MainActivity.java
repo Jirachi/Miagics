@@ -15,17 +15,12 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.FadeIn;
-import com.badlogic.gdx.scenes.scene2d.actions.FadeOut;
-import com.badlogic.gdx.scenes.scene2d.actions.Parallel;
-import com.badlogic.gdx.scenes.scene2d.actions.ScaleTo;
-import com.badlogic.gdx.scenes.scene2d.actions.Sequence;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.miage.jirachi.resource.LevelLoader;
 
 public class MainActivity  extends AndroidApplication {
@@ -61,12 +56,15 @@ public class MainActivity  extends AndroidApplication {
             Texture mTextBouton2 = new Texture(Gdx.files.internal("buttons/BoutonSaut2.png"));
             TextureRegion mTextRBouton = new TextureRegion(mTextBouton,0,0,64,64);
             TextureRegion mTextRBouton2 = new TextureRegion(mTextBouton2,0,0,64,64);
-            testBouton = new Button(mTextRBouton,mTextRBouton2);
-            testBouton.width = 50;
-            testBouton.height = 50;
-            testBouton.setClickListener(new ClickListener(){
+            TextureRegionDrawable TextDBouton = new TextureRegionDrawable(mTextRBouton);
+            TextureRegionDrawable TextDBouton2 = new TextureRegionDrawable(mTextRBouton2);
+            
+            testBouton = new Button(TextDBouton,TextDBouton2);
+            testBouton.setWidth(50);
+            testBouton.setHeight(50);
+            testBouton.addListener(new ClickListener(){
                 @Override
-                public void click(Actor arg0, float arg1, float arg2) {
+                public void clicked(InputEvent event, float x, float y) {
                     CharacterController.getInstance().getSelf().jump();
                 }
 
@@ -74,8 +72,8 @@ public class MainActivity  extends AndroidApplication {
             Texture mTextBarre=new Texture(Gdx.files.internal("data/Life.png"));
             TextureRegion mTextRBarre = new TextureRegion(mTextBarre, 0, 0, 32, 32);
             testImage = new Image(mTextRBarre);
-            testImage.width = 150;
-            testImage.height = 30;
+            testImage.setWidth(150);
+            testImage.setHeight(30);
             mStage = new Stage(400, 240, true);
             backGTexture = new SceneBackground("data/background/decor1.png");
 
@@ -138,12 +136,12 @@ public class MainActivity  extends AndroidApplication {
 	            mCamera.update();
 	            
 	            // Position du bouton
-	            testBouton.x = mCamera.position.x - mCamera.viewportWidth / 2.0f;
-	            testBouton.y = mCamera.position.y - mCamera.viewportHeight / 2.0f;
+	            testBouton.setX(mCamera.position.x - mCamera.viewportWidth / 2.0f);
+	            testBouton.setY(mCamera.position.y - mCamera.viewportHeight / 2.0f);
 	            
-	            testImage.x = mCamera.position.x + mCamera.viewportWidth/2 - 160;
-	            testImage.y = mCamera.position.y - mCamera.viewportHeight/2 + 10;
-	            testImage.scaleX = self.getHealth()/100.0f;
+	            testImage.setX(mCamera.position.x + mCamera.viewportWidth/2 - 160);
+	            testImage.setY(mCamera.position.y - mCamera.viewportHeight/2 + 10);
+	            testImage.setScaleX(self.getHealth()/100.0f);
             }
 
             // Dessin de la scène
@@ -200,13 +198,7 @@ public class MainActivity  extends AndroidApplication {
             mStage.touchDragged(arg0, arg1, arg2);
             return false;
         }
-
-        @Override
-        public boolean touchMoved(int arg0, int arg1) {
-            mStage.touchMoved(arg0, arg1);
-            return false;
-        }
-
+        
         @Override
         public boolean touchDown(int x, int y, int pointerId, int button) {
         	Player self = CharacterController.getInstance().getSelf();
@@ -237,5 +229,11 @@ public class MainActivity  extends AndroidApplication {
             }
             return true;
         }
+
+		@Override
+		public boolean mouseMoved(int arg0, int arg1) {
+			mStage.mouseMoved(arg0, arg1);
+			return false;
+		}
     }
 }

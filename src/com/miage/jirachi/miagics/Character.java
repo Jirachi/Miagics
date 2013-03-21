@@ -15,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.WorldManifold;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.miage.jirachi.resource.ResourceAnimated;
 
 public class Character extends Image {
@@ -72,7 +73,7 @@ public class Character extends Image {
 		buildPhysicsBody();
 		
 		// On definit l'echelle du perso (1/2 de la taille reelle)
-		this.scaleX = this.scaleY = 0.5f;
+		this.setScale(0.5f);
 		
 		mHealth = 100;
 	}
@@ -103,7 +104,7 @@ public class Character extends Image {
 	 * @return Position
 	 */
 	public Vector2 getPosition() {
-		return mPhysicsBody.getWorldCenter().sub(super.width/5.0f, super.height/5.0f);
+		return mPhysicsBody.getWorldCenter().sub(super.getWidth()/5.0f, super.getHeight()/5.0f);
 	}
 
 	public Vector2 getRawPosition() {
@@ -129,7 +130,7 @@ public class Character extends Image {
 	        mAnimations.playAnimation("walk");
 	    }
 	    
-	    this.setRegion(mAnimations.getKeyFrame(timeDelta));
+	    this.setDrawable(new TextureRegionDrawable(mAnimations.getKeyFrame(timeDelta)));
 	    
 		// Mise à jour des propriétés physiques
         Vector2 vel = mPhysicsBody.getLinearVelocity(); 
@@ -202,8 +203,8 @@ public class Character extends Image {
             mPhysicsBody.applyLinearImpulse(mMoveSpeed / 4.0f, 0, 0, 0);
         }
         
-        super.x = getPosition().x;
-        super.y = getPosition().y;
+        super.setX(getPosition().x);
+        super.setY(getPosition().y);
 	}
 	
 	/**

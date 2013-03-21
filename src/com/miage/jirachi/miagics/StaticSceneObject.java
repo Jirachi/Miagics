@@ -16,6 +16,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.miage.jirachi.resource.Resource;
 import com.miage.jirachi.resource.ResourceManager;
 
@@ -67,8 +68,8 @@ public class StaticSceneObject extends SceneObject {
         mObjectTexture = null;
         
         createSprites();
-        super.width *= sX;
-        super.height *= sY;
+        super.setWidth(super.getWidth() * sX);
+        super.setHeight(super.getHeight() * sY);
         createObject(); 
     }
     
@@ -125,8 +126,8 @@ public class StaticSceneObject extends SceneObject {
 	    String fixtureName = mResource.file.substring(mResource.file.lastIndexOf('/')+1);
 	    
 	    try {
-	    	PhysicsController.getInstance().getBodyEditorLoader().attachFixture(mObjectModel, fixtureName, mFixtureDefinition, super.width);
-			mObjectModelOrigin = PhysicsController.getInstance().getBodyEditorLoader().getOrigin(fixtureName, super.width).cpy();	
+	    	PhysicsController.getInstance().getBodyEditorLoader().attachFixture(mObjectModel, fixtureName, mFixtureDefinition, super.getWidth());
+			mObjectModelOrigin = PhysicsController.getInstance().getBodyEditorLoader().getOrigin(fixtureName, super.getWidth()).cpy();	
 	    }
 	    catch (RuntimeException ex) {
 	    	Log.e("Physics", "Couldn't load physics model for resource " + fixtureName);
@@ -141,9 +142,9 @@ public class StaticSceneObject extends SceneObject {
 		mObjectTexture = new Texture(Gdx.files.internal(mResource.file));
 		mObjectTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		
-		super.setRegion(new TextureRegion(mObjectTexture,mObjectTexture.getWidth(),mObjectTexture.getHeight()));
-		super.width = mObjectTexture.getWidth();
-        super.height = mObjectTexture.getHeight();
+		super.setDrawable(new TextureRegionDrawable(new TextureRegion(mObjectTexture,mObjectTexture.getWidth(),mObjectTexture.getHeight())));
+		super.setWidth(mObjectTexture.getWidth());
+        super.setHeight(mObjectTexture.getHeight());
 	}
 	
 	/**
@@ -152,15 +153,15 @@ public class StaticSceneObject extends SceneObject {
 	@Override
 	public void act(float timeDelta) {
 		if (mObjectModelOrigin != null) {
-			super.originX = mObjectModelOrigin.x;
-	    	super.originY = mObjectModelOrigin.y;
+			super.setOriginX(mObjectModelOrigin.x);
+	    	super.setOriginY(mObjectModelOrigin.y);
 		} else {
-			super.originX = 0;
-			super.originY = 0;
+			super.setOriginX(0);
+			super.setOriginY(0);
 		}
-	    super.rotation = mObjectModel.getAngle() * MathUtils.radiansToDegrees;
-	    super.x = getPosition().x;
-	    super.y = getPosition().y;
+	    super.setRotation(mObjectModel.getAngle() * MathUtils.radiansToDegrees);
+	    super.setX(getPosition().x);
+	    super.setY(getPosition().y);
 	}
 	
 	@Override
@@ -188,8 +189,8 @@ public class StaticSceneObject extends SceneObject {
      * Definit l'echelle de l'objet
      */
     public void setScale(float sX, float sY) {
-        super.width = mObjectTexture.getWidth() * sX;
-        super.height = mObjectTexture.getHeight() * sY;
+        super.setWidth(mObjectTexture.getWidth() * sX);
+        super.setHeight(mObjectTexture.getHeight() * sY);
         
         // On recree l'objet physique pour correspondre a la nouvelle taille
         createObject();

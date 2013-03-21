@@ -1,6 +1,7 @@
 package com.miage.jirachi.miagics;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.miage.jirachi.resource.ResourceAnimated;
 
 public class AnimatedSceneObject extends StaticSceneObject {
@@ -21,7 +22,7 @@ public class AnimatedSceneObject extends StaticSceneObject {
 	
 	@Override
 	public void act(float timeDelta) {
-		this.setRegion(mAnimations.getKeyFrame(timeDelta));
+		this.setDrawable(new TextureRegionDrawable(mAnimations.getKeyFrame(timeDelta)));
 	}
 	
 	/**
