@@ -118,10 +118,10 @@ public class MainActivity  extends AndroidApplication {
             // =======================
             // Connect to the server !
             try {
-                NetworkController.getInstance().connect("192.168.0.11", 37153);
+                //NetworkController.getInstance().connect("192.168.0.11", 37153);
                 
                 //NetworkController.getInstance().connect("friboks.ouverta.fr", 37153);
-                //NetworkController.getInstance().connect("xplod-devbox.bbqdroid.org", 37153);
+                NetworkController.getInstance().connect("xplod.clusterfuck.bbqdroid.org", 37153);
                 
                 NetworkController.getInstance().send(PacketMaker.makeBootMe());
             } catch (IOException e) {
