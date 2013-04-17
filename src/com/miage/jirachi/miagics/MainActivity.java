@@ -177,7 +177,7 @@ public class MainActivity  extends AndroidApplication {
             CharacterController.getInstance().update();
             
             // Affiche les éléments physiques (pour débug)
-            PhysicsController.getInstance().drawDebug(mCamera.combined);
+            // PhysicsController.getInstance().drawDebug(mCamera.combined);
         }
 
         @Override
