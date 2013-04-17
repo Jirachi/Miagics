@@ -71,6 +71,6 @@ public class Player extends Character {
 	
 	private void doSyncPosition() {
 		Packet packet = PacketMaker.makeSyncPosition(getRawPosition().x, getRawPosition().y);
-        NetworkController.getInstance().sendUnreliable(packet);
+        NetworkController.getInstance().send(packet);
 	}
 }
